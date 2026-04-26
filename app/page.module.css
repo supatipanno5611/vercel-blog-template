@@ -1,0 +1,42 @@
+.main {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 120px 24px;
+}
+
+@media (max-width: 600px) {
+  .main {
+    padding: 48px 20px;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .top {
+    margin-bottom: auto;
+  }
+}
+
+.title {
+  font-family: var(--font-kopub), Georgia, serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.description {
+  font-size: 1rem;
+  color: var(--muted);
+  margin-bottom: 36px;
+}
+
+.guide {
+  display: block;
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.guide:hover {
+  color: var(--link);
+}
