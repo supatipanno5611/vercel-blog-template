@@ -1,29 +1,26 @@
 'use client'
 
 import Link from 'next/link'
-import { highlight } from '@/lib/highlight'
+import { getHighlightedSnippets, highlight } from '@/lib/highlight'
 import { tagMatchesAnyTerm } from '@/lib/topic-match'
 import type { SearchResult, TopicResult } from '@/lib/searchIndex'
 import styles from './SearchBox.module.css'
 
-function getSnippet(body: string, query: string, length = 80): string {
-  const terms = query.trim().split(/\s+/).filter(Boolean)
-  const lower = body.toLowerCase()
-  let pos = -1
+function getSearchTerms(result: SearchResult): string[] {
+  return [...result.terms, ...result.queryTerms]
+}
 
-  for (const term of terms) {
-    const idx = lower.indexOf(term.toLowerCase())
-    if (idx !== -1) {
-      pos = idx
-      break
-    }
-  }
+function getMatchedFields(result: SearchResult): Set<string> {
+  return new Set(Object.values(result.match).flat())
+}
 
-  if (pos === -1) return body.slice(0, length) + (body.length > length ? '...' : '')
-
-  const start = Math.max(0, pos - 25)
-  const end = Math.min(body.length, start + length)
-  return (start > 0 ? '...' : '') + body.slice(start, end) + (end < body.length ? '...' : '')
+function getFieldBadges(fields: Set<string>): string[] {
+  const badges: string[] = []
+  if (fields.has('title')) badges.push('Title')
+  if (fields.has('body')) badges.push('Body')
+  if (fields.has('base')) badges.push('Topic')
+  if (!badges.length && fields.has('choseong')) badges.push('Text')
+  return badges
 }
 
 type Props = {
@@ -86,8 +83,12 @@ export default function SearchResults({
         <li className={styles.empty}>No results for &quot;{query}&quot;.</li>
       ) : (
         results.map((result, i) => {
-          const matchedFields = new Set(Object.values(result.match).flat())
-          const snippet = matchedFields.has('body') ? getSnippet(result.body, query) : null
+          const matchedFields = getMatchedFields(result)
+          const searchTerms = getSearchTerms(result)
+          const snippets = matchedFields.has('body')
+            ? getHighlightedSnippets(result.body, query, searchTerms, { limit: 2 })
+            : []
+          const fieldBadges = getFieldBadges(matchedFields)
           const showTags = result.tags.length > 0 && filter === 'all' && matchedFields.has('base')
           const isActive = i === activeIndex
 
@@ -99,7 +100,18 @@ export default function SearchResults({
               onMouseEnter={() => onActiveChange(i)}
             >
               <Link href={result.url} onClick={onClose}>
-                <span className={styles.title}>{highlight(result.title, query, styles.mark)}</span>
+                <span className={styles.resultHeader}>
+                  <span className={styles.title}>{highlight(result.title, query, styles.mark, searchTerms)}</span>
+                  {fieldBadges.length > 0 && (
+                    <span className={styles.fieldBadges} aria-label={`Matched in ${fieldBadges.join(', ')}`}>
+                      {fieldBadges.map((badge) => (
+                        <span key={badge} className={styles.fieldBadge}>
+                          {badge}
+                        </span>
+                      ))}
+                    </span>
+                  )}
+                </span>
                 {showTags && (
                   <span className={styles.tags}>
                     {result.tags.map((tag) => (
@@ -107,12 +119,16 @@ export default function SearchResults({
                         key={tag}
                         className={tagMatchesAnyTerm(tag, query) ? styles.tagMatched : styles.tagOther}
                       >
-                        {tag}
+                        {highlight(tag, query, styles.mark, searchTerms)}
                       </span>
                     ))}
                   </span>
                 )}
-                {snippet && <span className={styles.snippet}>{highlight(snippet, query, styles.mark)}</span>}
+                {snippets.map((snippet) => (
+                  <span key={snippet} className={styles.snippet}>
+                    {highlight(snippet, query, styles.mark, searchTerms)}
+                  </span>
+                ))}
               </Link>
             </li>
           )

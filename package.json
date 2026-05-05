@@ -8,7 +8,9 @@
     "prebuild": "velite",
     "start": "next start",
     "lint": "eslint",
-    "sync": "node scripts/sync.mjs"
+    "sync": "node scripts/sync.mjs",
+    "content:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/content-doctor.mjs check",
+    "content:fix": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/content-doctor.mjs fix"
   },
   "dependencies": {
     "es-hangul": "^2.3.8",

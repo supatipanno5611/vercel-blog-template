@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import fabStyles from './Fab.module.css'
 import styles from './AudioFab.module.css'
 

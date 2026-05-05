@@ -11,6 +11,7 @@ import { remarkCue } from './lib/remark-cue'
 import { remarkChapter } from './lib/remark-chapter'
 import { remarkDirectiveEmbeds } from './lib/remark-directive-embeds'
 import { rejectMdxSyntax, remarkMarkdownOnly } from './lib/remark-markdown-only'
+import { extractWikiLinks } from './lib/wiki-link'
 
 const posts = defineCollection({
   name: 'Post',
@@ -18,6 +19,7 @@ const posts = defineCollection({
   schema: s.object({
     draft: s.boolean().default(false),
     base: s.string().array().default([]),
+    media: s.enum(['audio', 'youtube']).optional(),
     slug: s.path(),
     body: s.raw(),
     raw: s.raw(),
@@ -46,6 +48,7 @@ const posts = defineCollection({
       slugAsParams: data.slug.replace(/\s+/g, '-'),
       plainText: file.data.plainText ?? '',
       hasAudio: /::audio\b/.test(source),
+      wikiLinks: extractWikiLinks(source).map((link) => link.target),
     }
   }),
 })

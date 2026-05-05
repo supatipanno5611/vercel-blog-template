@@ -32,14 +32,14 @@ Markdown-only `.md` files live directly under `content/`.
 content/
 ├── home.md
 ├── 사용 안내.md
-├── 내 글.md
+├── 새 글.md
 └── notes/
     └── 하위 폴더 글.md
 ```
 
 The file path becomes the URL path. Spaces are converted to hyphens.
 
-- `content/내 글.md` -> `/내-글`
+- `content/새 글.md` -> `/새-글`
 - `content/notes/하위 폴더 글.md` -> `/notes/하위-폴더-글`
 
 The file name is used as the post title.
@@ -78,12 +78,20 @@ Callouts:
 YouTube:
 
 ```md
+---
+media: youtube
+---
+
 ::youtube{id="VIDEO_ID"}
 ```
 
 Audio:
 
 ```md
+---
+media: audio
+---
+
 ::audio{src="https://example.com/audio.mp3"}
 ```
 
@@ -108,6 +116,16 @@ Cues:
 - Search index is served from `/search-index.json`.
 - `base` frontmatter values become topics.
 - Topic pages are available at `/topics/[topic]`.
+- Wiki links power the backlinks section on post pages.
+
+## Content Doctor
+
+```bash
+npm run content:check
+npm run content:fix
+```
+
+`check` reports missing `base`, suspicious title/slug issues, broken wiki links, and media directive mismatches. `fix` only applies safe automatic fixes such as adding missing `base` or adding `media` when exactly one media directive exists.
 
 ## Configuration
 

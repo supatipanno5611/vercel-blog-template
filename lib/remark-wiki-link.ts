@@ -1,5 +1,6 @@
 import { visit } from 'unist-util-visit'
 import type { Root, Text } from 'mdast'
+import { normalizeWikiTarget } from './wiki-link'
 
 type HtmlText = Text & {
   data: {
@@ -24,7 +25,7 @@ export function remarkWikiLink() {
           if (!match) return { type: 'text', value: part }
 
           const [pageName, alias] = match[1].split('|')
-          const href = '/' + pageName.trim().toLowerCase().replace(/\s+/g, '-')
+          const href = '/' + normalizeWikiTarget(pageName)
           const label = alias?.trim() || pageName.trim()
 
           return {

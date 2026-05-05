@@ -43,6 +43,10 @@ export default async function PostPage({ params }: Props) {
           .slice(0, 5)
           .map((x) => x.p)
       : []
+  const backlinks = posts
+    .filter((p) => !p.draft && p.slugAsParams !== post.slugAsParams && p.wikiLinks.includes(post.slugAsParams))
+    .slice(0, 5)
+  const hasFooter = post.base.length > 0 || relatedPosts.length > 0 || backlinks.length > 0
 
   return (
     <CueProvider>
@@ -53,25 +57,41 @@ export default async function PostPage({ params }: Props) {
           <MarkdownContent source={post.body} />
         </article>
         {post.hasAudio && <AudioFab />}
-        {post.base.length > 0 && (
+        {hasFooter && (
           <footer className={styles.footer}>
-            <div className={styles.topicsBlock}>
-              <p className={styles.footerLabel}>Topics</p>
-              <ul className={styles.topicChipList}>
-                {post.base.map((base) => (
-                  <li key={base}>
-                    <a href={`/topics/${encodeURIComponent(base)}`} className={styles.topicChip}>
-                      {base}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {post.base.length > 0 && (
+              <div className={styles.topicsBlock}>
+                <p className={styles.footerLabel}>Topics</p>
+                <ul className={styles.topicChipList}>
+                  {post.base.map((base) => (
+                    <li key={base}>
+                      <a href={`/topics/${encodeURIComponent(base)}`} className={styles.topicChip}>
+                        {base}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             {relatedPosts.length > 0 && (
               <div>
                 <p className={styles.footerLabel}>Related posts</p>
                 <ul className={styles.relatedList}>
                   {relatedPosts.map((p) => (
+                    <li key={p.slug}>
+                      <a href={`/${p.slugAsParams}`} className={styles.relatedLink}>
+                        {p.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {backlinks.length > 0 && (
+              <div>
+                <p className={styles.footerLabel}>Backlinks</p>
+                <ul className={styles.relatedList}>
+                  {backlinks.map((p) => (
                     <li key={p.slug}>
                       <a href={`/${p.slugAsParams}`} className={styles.relatedLink}>
                         {p.title}
