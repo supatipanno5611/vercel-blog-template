@@ -26,25 +26,25 @@ npm start
 
 ## Content
 
-Markdown-only `.mdx` files live directly under `content/`.
+Markdown-only `.md` files live directly under `content/`.
 
 ```txt
 content/
-├── home.mdx
-├── 사용 안내.mdx
-├── 내 글.mdx
+├── home.md
+├── 사용 안내.md
+├── 내 글.md
 └── notes/
-    └── 하위 폴더 글.mdx
+    └── 하위 폴더 글.md
 ```
 
 The file path becomes the URL path. Spaces are converted to hyphens.
 
-- `content/내 글.mdx` -> `/내-글`
-- `content/notes/하위 폴더 글.mdx` -> `/notes/하위-폴더-글`
+- `content/내 글.md` -> `/내-글`
+- `content/notes/하위 폴더 글.md` -> `/notes/하위-폴더-글`
 
 The file name is used as the post title.
 
-```mdx
+```md
 ---
 draft: false
 base: [Next.js, MDX]
@@ -57,33 +57,33 @@ base: [Next.js, MDX]
 
 Wiki links:
 
-```mdx
+```md
 [[사용 안내]]
 [[사용 안내|가이드]]
 ```
 
 Highlight:
 
-```mdx
+```md
 ==highlighted text==
 ```
 
 Callouts:
 
-```mdx
+```md
 > [!note] Title
 > Content
 ```
 
 YouTube:
 
-```mdx
+```md
 ::youtube{id="VIDEO_ID"}
 ```
 
 Audio:
 
-```mdx
+```md
 ::audio{src="https://example.com/audio.mp3"}
 ```
 
@@ -91,14 +91,14 @@ Raw HTML, JSX, JavaScript expressions, and `import`/`export` are not supported i
 
 Chapters:
 
-```mdx
+```md
 ## 0:00 Intro
 ## 1:30 Main section
 ```
 
 Cues:
 
-```mdx
+```md
 ▶ 0:05 This paragraph is tied to the media timestamp.
 ```
 

@@ -14,7 +14,7 @@ import { rejectMdxSyntax, remarkMarkdownOnly } from './lib/remark-markdown-only'
 
 const posts = defineCollection({
   name: 'Post',
-  pattern: '**/*.mdx',
+  pattern: '**/*.md',
   schema: s.object({
     draft: s.boolean().default(false),
     base: s.string().array().default([]),

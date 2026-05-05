@@ -36,8 +36,8 @@ async function main() {
   )
   const vercelSet = new Set(
     (await readdir(VERCEL_CONTENT))
-      .filter((file) => file.endsWith('.mdx'))
-      .map((file) => file.replace(/\.mdx$/, ''))
+      .filter((file) => file.endsWith('.md'))
+      .map((file) => file.replace(/\.md$/, ''))
   )
 
   const actions = []
@@ -50,7 +50,7 @@ async function main() {
 
     if (inPublish && inVercel) {
       const publishStat = await stat(join(VAULT_PUBLISH, `${name}.md`))
-      const vercelStat = await stat(join(VERCEL_CONTENT, `${name}.mdx`))
+      const vercelStat = await stat(join(VERCEL_CONTENT, `${name}.md`))
       if (publishStat.mtimeMs > vercelStat.mtimeMs + MTIME_TOLERANCE_MS) {
         actions.push({ type: 'update', name })
       } else if (vercelStat.mtimeMs > publishStat.mtimeMs + MTIME_TOLERANCE_MS) {
@@ -88,7 +88,7 @@ async function main() {
 
   for (const action of actions) {
     const publishPath = join(VAULT_PUBLISH, `${action.name}.md`)
-    const vercelPath = join(VERCEL_CONTENT, `${action.name}.mdx`)
+    const vercelPath = join(VERCEL_CONTENT, `${action.name}.md`)
 
     switch (action.type) {
       case 'add':
@@ -120,7 +120,7 @@ async function main() {
     (await readdir(VAULT_PUBLISH)).filter((file) => file.endsWith('.md')).map((file) => file.replace(/\.md$/, ''))
   )
   const finalVercel = new Set(
-    (await readdir(VERCEL_CONTENT)).filter((file) => file.endsWith('.mdx')).map((file) => file.replace(/\.mdx$/, ''))
+    (await readdir(VERCEL_CONTENT)).filter((file) => file.endsWith('.md')).map((file) => file.replace(/\.md$/, ''))
   )
   await saveCurrentManifest(finalPublish, finalVercel)
   console.log('완료.')
