@@ -47,7 +47,7 @@ The file name is used as the post title.
 ```md
 ---
 draft: false
-base: [Next.js, MDX]
+base: [Next.js, MD]
 ---
 
 본문...
