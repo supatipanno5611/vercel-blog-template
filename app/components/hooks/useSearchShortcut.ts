@@ -2,12 +2,12 @@
 
 import { useEffect } from 'react'
 
-export function useCtrlSlash(callback: () => void, enabled = true) {
+export function useSearchShortcut(callback: () => void, enabled = true) {
   useEffect(() => {
     if (!enabled) return
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key !== '/' || !e.ctrlKey) return
+      if (e.key.toLowerCase() !== 'k' || !e.ctrlKey) return
       const tag = (document.activeElement as HTMLElement | null)?.tagName
       if (tag === 'INPUT' || tag === 'TEXTAREA') return
       e.preventDefault()

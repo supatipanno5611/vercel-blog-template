@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from '
 import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import { useClickOutside } from './hooks/useClickOutside'
-import { useCtrlSlash } from './hooks/useCtrlSlash'
+import { useSearchShortcut } from './hooks/useSearchShortcut'
 import {
   loadIndex,
   isIndexReady,
@@ -112,7 +112,7 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
     }, [resetResults, overlayMode, onClose])
   )
 
-  useCtrlSlash(useCallback(() => inputRef.current?.focus(), []), !overlayMode)
+  useSearchShortcut(useCallback(() => inputRef.current?.focus(), []), !overlayMode)
 
   useEffect(() => {
     if (overlayMode) inputRef.current?.focus()

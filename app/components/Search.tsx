@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import SearchBox from './SearchBox'
 import { useHideOnScroll } from './useHideOnScroll'
-import { useCtrlSlash } from './hooks/useCtrlSlash'
+import { useSearchShortcut } from './hooks/useSearchShortcut'
 import fabStyles from './Fab.module.css'
 import styles from './Search.module.css'
 
@@ -15,7 +15,7 @@ export default function Search() {
   const [open, setOpen] = useState(false)
   const [initialQuery, setInitialQuery] = useState<string | undefined>()
 
-  useCtrlSlash(
+  useSearchShortcut(
     useCallback(() => {
       setInitialQuery(undefined)
       setOpen(true)
@@ -53,7 +53,7 @@ export default function Search() {
           className={`${fabStyles.fab} ${styles.search} ${visible ? '' : fabStyles.fabHidden}`}
           onClick={openSearch}
           aria-label="Open search"
-          title="Search (Ctrl+/)"
+          title="Search (Ctrl+K)"
         >
           <svg viewBox="0 0 20 20" fill="none" aria-hidden>
             <circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.6" />

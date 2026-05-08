@@ -6,7 +6,7 @@ import { safeDecodeURIComponent } from '@/lib/safe-decode'
 import { overlapCount, jaccard } from '@/lib/topics'
 import TopicPicker from '@/app/components/TopicPicker'
 import { useHideOnScroll } from '@/app/components/useHideOnScroll'
-import { useCtrlSlash } from '@/app/components/hooks/useCtrlSlash'
+import { useSearchShortcut } from '@/app/components/hooks/useSearchShortcut'
 import fabStyles from '@/app/components/Fab.module.css'
 import searchFabStyles from '@/app/components/Search.module.css'
 import styles from './page.module.css'
@@ -47,7 +47,7 @@ export default function TopicsClient({ topic, posts, allTopics, curatedTopics }:
   const visibleCount = visibleState.key === selectedKey ? visibleState.count : 30
   const pickerVisible = useHideOnScroll()
 
-  useCtrlSlash(useCallback(() => setPickerOpen(true), []))
+  useSearchShortcut(useCallback(() => setPickerOpen(true), []))
 
   function buildUrl(newSelected: string[]): string {
     const [main, ...extras] = newSelected
@@ -97,7 +97,7 @@ export default function TopicsClient({ topic, posts, allTopics, curatedTopics }:
         className={`${fabStyles.fab} ${searchFabStyles.search} ${pickerVisible ? '' : fabStyles.fabHidden}`}
         onClick={() => setPickerOpen(true)}
         aria-label="Open topic search"
-        title="Topic search (Ctrl+/)"
+        title="Topic search (Ctrl+K)"
       >
         <svg viewBox="0 0 20 20" fill="none" aria-hidden>
           <circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.6" />
