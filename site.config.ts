@@ -1,6 +1,6 @@
 export const siteConfig = {
-  title: 'sakko',
-  description: '',
+  title: '사이트 이름',
+  description: '설명',
   VAULT_PUBLISH: '_publish',
   homeSlug: 'home',
   excludedSlugs: ['home', '사용-안내', '웹사이트에-기여한-사람들'],
