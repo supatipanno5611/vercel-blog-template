@@ -126,6 +126,50 @@ article h2 { font-size: 1.25rem; }
 article h3 { font-size: 1.05rem; }
 article h4 { font-size: 1rem; }
 
+article .heading-anchor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  scroll-margin-top: 88px;
+}
+
+article .heading-copy {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: color 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+}
+
+article .heading-anchor:hover .heading-copy,
+article .heading-copy:focus-visible {
+  opacity: 1;
+}
+
+article .heading-copy:hover {
+  background: var(--color-hover);
+  color: var(--color-accent);
+}
+
+article .heading-copy svg {
+  width: 15px;
+  height: 15px;
+}
+
+@media (max-width: 600px) {
+  article .heading-copy {
+    opacity: 1;
+  }
+}
+
 article ul,
 article ol {
   padding-left: 1.6em;

@@ -1,15 +1,18 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import type { TocItem } from '@/lib/heading-toc'
 import ChapterMenu from './ChapterMenu'
+import TocMenu from './TocMenu'
 import styles from './Header.module.css'
 
 type Props = {
   title?: string
   showAudioRepeat?: boolean
+  tocItems?: TocItem[]
 }
 
-export default function Header({ title, showAudioRepeat }: Props) {
+export default function Header({ title, showAudioRepeat, tocItems }: Props) {
   const [loop, setLoop] = useState(false)
 
   useEffect(() => {
@@ -23,6 +26,7 @@ export default function Header({ title, showAudioRepeat }: Props) {
     <header className={styles.header}>
       {title && <span className={styles.pageTitle}>{title}</span>}
       <div className={styles.rightControls}>
+        <TocMenu items={tocItems} />
         <ChapterMenu />
         {showAudioRepeat && (
           <button

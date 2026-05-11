@@ -7,6 +7,7 @@ import { CueProvider } from '@/app/components/CueProvider'
 import Header from '@/app/components/Header'
 import YouTubeEmbed from '@/app/components/YouTubeEmbed'
 import { safeDecodeURIComponent } from '@/lib/safe-decode'
+import { extractTocItems } from '@/lib/heading-toc'
 import { overlapCount, jaccard } from '@/lib/topics'
 import styles from './page.module.css'
 
@@ -48,16 +49,18 @@ export default async function PostPage({ params }: Props) {
     .filter((p) => !p.draft && p.slugAsParams !== post.slugAsParams && p.wikiLinks.includes(post.slugAsParams))
     .slice(0, 5)
   const hasFooter = Boolean(post.audioTitle) || post.base.length > 0 || relatedPosts.length > 0 || backlinks.length > 0
+  const enableHeadingAnchors = !post.youtubeId && !post.audioSrc
+  const tocItems = enableHeadingAnchors ? extractTocItems(post.body) : []
 
   return (
     <CueProvider>
       <main className={styles.main} data-has-audio={post.hasAudio || undefined}>
-        <Header title={post.title} showAudioRepeat={post.hasAudio} />
+        <Header title={post.title} showAudioRepeat={post.hasAudio} tocItems={tocItems} />
         {post.hasAudio && <AudioSeekbar />}
         {post.youtubeId && <YouTubeEmbed id={post.youtubeId} />}
         {post.audioSrc && <audio src={post.audioSrc} preload="metadata" />}
         <article className={styles.article}>
-          <MarkdownContent source={post.body} />
+          <MarkdownContent source={post.body} enableHeadingAnchors={enableHeadingAnchors} />
         </article>
         {post.hasAudio && <AudioFab />}
         {hasFooter && (
