@@ -37,7 +37,9 @@
 
 .checkIcon {
   color: var(--color-accent);
-  font-size: 0.8rem;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
 }
 
 .fallbackRow {

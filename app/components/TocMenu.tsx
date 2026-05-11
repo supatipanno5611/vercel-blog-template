@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { TocItem } from '@/lib/heading-toc'
 import { scrollStartBelowHeader } from './CueProvider'
 import { useClickOutside } from './hooks/useClickOutside'
+import { ListIcon } from './icons'
 import styles from './TocMenu.module.css'
 
 type Props = {
@@ -37,12 +38,7 @@ export default function TocMenu({ items = [] }: Props) {
         aria-expanded={open}
         title="본문 목차"
       >
-        <svg viewBox="0 0 20 20" fill="none" aria-hidden>
-          <path d="M5 5.75h10M5 10h10M5 14.25h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-          <circle cx="3" cy="5.75" r="0.8" fill="currentColor" />
-          <circle cx="3" cy="10" r="0.8" fill="currentColor" />
-          <circle cx="3" cy="14.25" r="0.8" fill="currentColor" />
-        </svg>
+        <ListIcon aria-hidden />
       </button>
       {open && (
         <div className={styles.dropdown} role="menu">

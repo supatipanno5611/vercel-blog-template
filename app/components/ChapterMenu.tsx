@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { scrollStartBelowHeader, useCue } from './CueProvider'
 import { useClickOutside } from './hooks/useClickOutside'
+import { ListIcon } from './icons'
 import styles from './ChapterMenu.module.css'
 
 export default function ChapterMenu() {
@@ -34,11 +35,7 @@ export default function ChapterMenu() {
         aria-label="챕터 목록"
         aria-expanded={open}
       >
-        <svg viewBox="0 0 20 20" fill="none" aria-hidden>
-          <rect x="4" y="5" width="12" height="1.5" rx="0.75" fill="currentColor" />
-          <rect x="4" y="9.25" width="12" height="1.5" rx="0.75" fill="currentColor" />
-          <rect x="4" y="13.5" width="8" height="1.5" rx="0.75" fill="currentColor" />
-        </svg>
+        <ListIcon aria-hidden />
       </button>
       {open && (
         <div className={styles.dropdown} role="menu">

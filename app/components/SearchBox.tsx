@@ -14,6 +14,7 @@ import {
   type TopicResult,
 } from '@/lib/searchIndex'
 import SearchResults from './SearchResults'
+import { BackIcon, SearchIcon, XIcon } from './icons'
 import styles from './SearchBox.module.css'
 
 type Filter = 'all' | 'title' | 'body' | 'base'
@@ -248,33 +249,14 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
         <div className={styles.inputWrap}>
           {overlayMode && (
             <button className={styles.backButton} onClick={close} aria-label="Close search">
-              <svg viewBox="0 0 20 20" fill="none" aria-hidden>
-                <polyline
-                  points="12,4 6,10 12,16"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <BackIcon aria-hidden />
             </button>
           )}
           <div className={styles.inputField}>
             {loading ? (
               <span className={styles.spinner} aria-hidden />
             ) : (
-              <svg className={styles.icon} viewBox="0 0 20 20" fill="none" aria-hidden>
-                <circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.6" />
-                <line
-                  x1="12.5"
-                  y1="12.5"
-                  x2="17"
-                  y2="17"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                />
-              </svg>
+              <SearchIcon className={styles.icon} aria-hidden />
             )}
             <input
               ref={inputRef}
@@ -290,10 +272,7 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
             />
             {hasQuery && (
               <button className={styles.clear} onClick={handleClear} aria-label="Clear search">
-                <svg viewBox="0 0 20 20" fill="none" aria-hidden>
-                  <line x1="5" y1="5" x2="15" y2="15" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                  <line x1="15" y1="5" x2="5" y2="15" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                </svg>
+                <XIcon aria-hidden />
               </button>
             )}
           </div>

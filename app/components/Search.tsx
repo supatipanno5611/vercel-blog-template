@@ -6,6 +6,7 @@ import SearchBox from './SearchBox'
 import { useHideOnScroll } from './useHideOnScroll'
 import { useSearchShortcut } from './hooks/useSearchShortcut'
 import fabStyles from './Fab.module.css'
+import { SearchIcon } from './icons'
 import styles from './Search.module.css'
 
 export default function Search() {
@@ -55,10 +56,7 @@ export default function Search() {
           aria-label="Open search"
           title="Search (Ctrl+K)"
         >
-          <svg viewBox="0 0 20 20" fill="none" aria-hidden>
-            <circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.6" />
-            <line x1="12.5" y1="12.5" x2="17" y2="17" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-          </svg>
+          <SearchIcon aria-hidden />
         </button>
       )}
       {open && <SearchBox overlayMode initialQuery={initialQuery} onClose={closeSearch} />}

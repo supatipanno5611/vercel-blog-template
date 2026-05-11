@@ -8,6 +8,7 @@ import TopicPicker from '@/app/components/TopicPicker'
 import { useHideOnScroll } from '@/app/components/useHideOnScroll'
 import { useSearchShortcut } from '@/app/components/hooks/useSearchShortcut'
 import fabStyles from '@/app/components/Fab.module.css'
+import { SearchIcon, XIcon } from '@/app/components/icons'
 import searchFabStyles from '@/app/components/Search.module.css'
 import styles from './page.module.css'
 
@@ -99,10 +100,7 @@ export default function TopicsClient({ topic, posts, allTopics, curatedTopics }:
         aria-label="Open topic search"
         title="Topic search (Ctrl+K)"
       >
-        <svg viewBox="0 0 20 20" fill="none" aria-hidden>
-          <circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.6" />
-          <line x1="12.5" y1="12.5" x2="17" y2="17" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-        </svg>
+        <SearchIcon aria-hidden />
       </button>
 
       <TopicPicker
@@ -122,7 +120,7 @@ export default function TopicsClient({ topic, posts, allTopics, curatedTopics }:
               <span key={t} className={`${styles.chip} ${i === 0 ? styles.chipMain : styles.chipExtra}`}>
                 {t}
                 <button className={styles.chipRemove} onClick={() => removeTopic(t)} aria-label={`Remove ${t}`}>
-                  ×
+                  <XIcon aria-hidden />
                 </button>
               </span>
             ))}

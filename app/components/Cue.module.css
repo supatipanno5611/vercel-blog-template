@@ -37,6 +37,12 @@
     box-shadow 180ms ease;
 }
 
+.chip svg {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
 @media (hover: hover) {
   .chip:hover {
     color: var(--cue-active-color);

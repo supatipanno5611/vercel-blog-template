@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import type { TocItem } from '@/lib/heading-toc'
 import ChapterMenu from './ChapterMenu'
+import { RepeatIcon } from './icons'
 import TocMenu from './TocMenu'
 import styles from './Header.module.css'
 
@@ -37,15 +38,7 @@ export default function Header({ title, showAudioRepeat, tocItems }: Props) {
             aria-pressed={loop}
             title={loop ? 'Disable repeat' : 'Enable repeat'}
           >
-            <svg viewBox="0 0 20 20" fill="none" aria-hidden>
-              <path
-                d="M5 8V7a2 2 0 012-2h7l-2-2M15 12v1a2 2 0 01-2 2H6l2 2"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <RepeatIcon aria-hidden />
           </button>
         )}
       </div>

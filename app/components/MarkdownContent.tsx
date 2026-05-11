@@ -13,6 +13,7 @@ import { remarkMarkdownOnly } from '@/lib/remark-markdown-only'
 import { remarkWikiLink } from '@/lib/remark-wiki-link'
 import Chapter from './Chapter'
 import Cue from './Cue'
+import { CheckIcon, LinkIcon } from './icons'
 
 type Props = {
   source: string
@@ -43,15 +44,7 @@ function CopyHeadingLink({ id }: { id: string }) {
         window.setTimeout(() => setCopied(false), 1200)
       }}
     >
-      {copied ? (
-        <svg viewBox="0 0 20 20" fill="none" aria-hidden>
-          <path d="M4.5 10.5l3.4 3.4 7.6-8.1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      ) : (
-        <svg viewBox="0 0 20 20" fill="none" aria-hidden>
-          <path d="M7.5 10.5l-1 1a3 3 0 104.2 4.2l1.4-1.4M12.5 9.5l1-1a3 3 0 10-4.2-4.2L7.9 5.7M8 12l4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      )}
+      {copied ? <CheckIcon aria-hidden /> : <LinkIcon aria-hidden />}
     </button>
   )
 }

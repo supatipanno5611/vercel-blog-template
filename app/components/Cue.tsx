@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef } from 'react'
 import { scrollStartBelowHeader, useCue } from './CueProvider'
+import { PlayIcon } from './icons'
 import styles from './Cue.module.css'
 
 type Props = {
@@ -38,7 +39,7 @@ export default function Cue({ time, label, children }: Props) {
           }}
           aria-label={`${label}로 이동`}
         >
-          <span aria-hidden>▶</span>
+          <PlayIcon aria-hidden />
           <span>{label}</span>
         </button>
       </div>

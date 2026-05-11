@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react'
 import { useHideOnScroll } from './useHideOnScroll'
 import fabStyles from './Fab.module.css'
+import { CheckIcon, ShareIcon } from './icons'
 import styles from './ShareFab.module.css'
 
 export default function ShareFab() {
@@ -27,16 +28,7 @@ export default function ShareFab() {
       aria-label="링크 공유"
       title="링크 공유"
     >
-      {copied ? (
-        <svg viewBox="0 0 20 20" fill="none" aria-hidden>
-          <polyline points="4,10 8,14 16,6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      ) : (
-        <svg viewBox="0 0 20 20" fill="none" aria-hidden>
-          <path d="M10 3v10M6 7l4-4 4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M5 11v4a1 1 0 001 1h8a1 1 0 001-1v-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-        </svg>
-      )}
+      {copied ? <CheckIcon aria-hidden /> : <ShareIcon aria-hidden />}
     </button>
   )
 }

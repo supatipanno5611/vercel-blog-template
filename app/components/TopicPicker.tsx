@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom'
 import { highlight } from '@/lib/highlight'
 import { topicIncludesQuery } from '@/lib/topic-match'
 import searchStyles from './SearchBox.module.css'
+import { BackIcon, CheckIcon, SearchIcon, XIcon } from './icons'
 import styles from './TopicPicker.module.css'
 
 type TopicInfo = { name: string; count: number }
@@ -104,21 +105,10 @@ export default function TopicPicker({
       <div className={`${searchStyles.container} ${searchStyles.overlayContainer}`} role="dialog" aria-modal="true" aria-label="Topic search">
         <div className={searchStyles.inputWrap}>
           <button className={searchStyles.backButton} onClick={close} aria-label="Close topic search">
-            <svg viewBox="0 0 20 20" fill="none" aria-hidden>
-              <polyline
-                points="12,4 6,10 12,16"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <BackIcon aria-hidden />
           </button>
           <div className={searchStyles.inputField}>
-            <svg className={searchStyles.icon} viewBox="0 0 20 20" fill="none" aria-hidden>
-              <circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.6" />
-              <line x1="12.5" y1="12.5" x2="17" y2="17" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-            </svg>
+            <SearchIcon className={searchStyles.icon} aria-hidden />
             <input
               ref={inputRef}
               className={searchStyles.input}
@@ -144,10 +134,7 @@ export default function TopicPicker({
                 }}
                 aria-label="Clear topic search"
               >
-                <svg viewBox="0 0 20 20" fill="none" aria-hidden>
-                  <line x1="5" y1="5" x2="15" y2="15" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                  <line x1="15" y1="5" x2="5" y2="15" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                </svg>
+                <XIcon aria-hidden />
               </button>
             )}
           </div>
@@ -177,7 +164,7 @@ export default function TopicPicker({
                     <button className={styles.topicRow} onClick={() => onToggleSelect(topic.name)}>
                       <span className={searchStyles.title}>{highlight(topic.name, query, searchStyles.mark)}</span>
                       <span className={styles.meta}>
-                        {isSelected && <span className={styles.checkIcon} aria-hidden>✓</span>}
+                        {isSelected && <CheckIcon className={styles.checkIcon} aria-hidden />}
                         <span className={searchStyles.topicCount}>{topic.count} posts</span>
                       </span>
                     </button>
