@@ -1,8 +1,9 @@
 import { posts } from '#site/content'
+import { isHomeLinkPagePath } from '@/lib/home-link-pages'
 import { siteConfig } from '@/site.config'
 
 function visiblePosts() {
-  return posts.filter((p) => !p.draft && !siteConfig.excludedSlugs.includes(p.slugAsParams))
+  return posts.filter((p) => !p.draft && p.slugAsParams !== siteConfig.homeSlug && !isHomeLinkPagePath(p.slug))
 }
 
 export type TopicInfo = { name: string; count: number }

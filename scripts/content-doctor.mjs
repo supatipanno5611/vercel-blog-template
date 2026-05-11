@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs'
 import { readdir, readFile, writeFile } from 'node:fs/promises'
 import { basename, extname, join, relative } from 'node:path'
 import { argv, cwd, exit } from 'node:process'
+import { isHomeLinkPagePath, publicSlugForContentPath, titleForContentPath } from '../lib/home-link-pages.ts'
 import { siteConfig } from '../site.config.ts'
 
 const ROOT = cwd()
@@ -160,11 +161,11 @@ function extractWikiLinks(source) {
 }
 
 function slugForFile(file) {
-  return relative(CONTENT_DIR, file).replace(/\\/g, '/').replace(/\.md$/, '').replace(/\s+/g, '-')
+  return publicSlugForContentPath(relative(CONTENT_DIR, file))
 }
 
 function titleForFile(file) {
-  return basename(file, extname(file))
+  return titleForContentPath(basename(file, extname(file)))
 }
 
 function normalizePath(value) {
@@ -175,7 +176,6 @@ function configSet(values = []) {
   return new Set(values.map((value) => normalizeWikiTarget(normalizePath(value))))
 }
 
-const IGNORED_SLUGS = configSet(DOCTOR_CONFIG.ignoreSlugs)
 const IGNORED_FILES = configSet(DOCTOR_CONFIG.ignoreFiles)
 
 function ignoredRulesFor(map = {}, key) {
@@ -186,7 +186,7 @@ function ignoredRulesFor(map = {}, key) {
 function getExceptionContext(file, slug) {
   const fileKey = normalizeWikiTarget(normalizePath(relative(CONTENT_DIR, file)))
   return {
-    ignored: IGNORED_SLUGS.has(slug) || IGNORED_FILES.has(fileKey),
+    ignored: slug === siteConfig.homeSlug || isHomeLinkPagePath(fileKey) || IGNORED_FILES.has(fileKey),
     ignoredRules: new Set([
       ...ignoredRulesFor(DOCTOR_CONFIG.ignoreRulesBySlug, slug),
       ...ignoredRulesFor(DOCTOR_CONFIG.ignoreRulesByFile, fileKey),

@@ -1,5 +1,6 @@
 import { posts } from '#site/content'
 import { getChoseong } from 'es-hangul'
+import { isHomeLinkPagePath } from '@/lib/home-link-pages'
 import { siteConfig } from '@/site.config'
 
 export type SearchDoc = {
@@ -15,7 +16,7 @@ export type SearchDoc = {
 
 export function getSearchDocs(): SearchDoc[] {
   return posts
-    .filter((p) => !p.draft && !siteConfig.excludedSlugs.includes(p.slugAsParams))
+    .filter((p) => !p.draft && p.slugAsParams !== siteConfig.homeSlug && !isHomeLinkPagePath(p.slug))
     .map((p) => {
       const baseStr = p.base.join(' ')
       const audioTitle = p.audioTitle ?? ''

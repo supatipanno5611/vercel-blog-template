@@ -11,6 +11,7 @@ import { remarkChapter } from './lib/remark-chapter'
 import { isSafeAudioSrc, YOUTUBE_ID_RE } from './lib/markdown-security'
 import { rejectMdxSyntax, remarkMarkdownOnly } from './lib/remark-markdown-only'
 import { extractWikiLinks } from './lib/wiki-link'
+import { publicSlugForContentPath, titleForContentPath } from './lib/home-link-pages'
 
 function stripFencedCode(source: string) {
   return source.replace(/(^|\n)(`{3,}|~{3,})[\s\S]*?\n\2(?=\n|$)/g, '$1')
@@ -63,11 +64,10 @@ const posts = defineCollection({
     const tree = processor.parse(source)
     const file = new VFile({ value: source })
     await processor.run(tree, file)
-    const filename = data.slug.split('/').pop() ?? data.slug
     return {
       ...data,
-      title: filename,
-      slugAsParams: data.slug.replace(/\s+/g, '-'),
+      title: titleForContentPath(data.slug),
+      slugAsParams: publicSlugForContentPath(data.slug),
       plainText: file.data.plainText ?? '',
       audioTitle,
       hasAudio: Boolean(data.audioSrc),
