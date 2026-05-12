@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { uiText } from '@/lib/ui-text'
 import { scrollStartBelowHeader, useCue } from './CueProvider'
 import { useClickOutside } from './hooks/useClickOutside'
 import { ListIcon } from './icons'
@@ -32,7 +33,7 @@ export default function ChapterMenu() {
         type="button"
         className={`${styles.btn} ${open ? styles.btnActive : ''}`}
         onClick={() => setOpen((v) => !v)}
-        aria-label="챕터 목록"
+        aria-label={uiText.chapter.list}
         aria-expanded={open}
       >
         <ListIcon aria-hidden />

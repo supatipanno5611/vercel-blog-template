@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
+import { uiText } from '@/lib/ui-text'
 import { useHideOnScroll } from './useHideOnScroll'
 import fabStyles from './Fab.module.css'
 import { CheckIcon, ShareIcon } from './icons'
@@ -25,8 +26,8 @@ export default function ShareFab() {
     <button
       className={`${fabStyles.fab} ${styles.share} ${visible ? '' : fabStyles.fabHidden}`}
       onClick={handleShare}
-      aria-label="링크 공유"
-      title="링크 공유"
+      aria-label={uiText.share.label}
+      title={uiText.share.label}
     >
       {copied ? <CheckIcon aria-hidden /> : <ShareIcon aria-hidden />}
     </button>

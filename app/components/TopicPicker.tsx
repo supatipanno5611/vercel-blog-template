@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
 import { highlight } from '@/lib/highlight'
 import { topicIncludesQuery } from '@/lib/topic-match'
+import { uiText } from '@/lib/ui-text'
 import searchStyles from './SearchBox.module.css'
 import { BackIcon, CheckIcon, SearchIcon, XIcon } from './icons'
 import styles from './TopicPicker.module.css'
@@ -102,9 +103,9 @@ export default function TopicPicker({
   return (
     <>
       {mounted && createPortal(<div className={searchStyles.overlayBackdrop} onClick={close} />, document.body)}
-      <div className={`${searchStyles.container} ${searchStyles.overlayContainer}`} role="dialog" aria-modal="true" aria-label="주제어 검색">
+      <div className={`${searchStyles.container} ${searchStyles.overlayContainer}`} role="dialog" aria-modal="true" aria-label={uiText.topic.searchDialog}>
         <div className={searchStyles.inputWrap}>
-          <button className={searchStyles.backButton} onClick={close} aria-label="주제어 검색 닫기">
+          <button className={searchStyles.backButton} onClick={close} aria-label={uiText.topic.closeSearch}>
             <BackIcon aria-hidden />
           </button>
           <div className={searchStyles.inputField}>
@@ -113,7 +114,7 @@ export default function TopicPicker({
               ref={inputRef}
               className={searchStyles.input}
               type="text"
-              placeholder="주제어 찾기"
+              placeholder={uiText.topic.placeholder}
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value)
@@ -132,7 +133,7 @@ export default function TopicPicker({
                   setActiveIndex(0)
                   inputRef.current?.focus()
                 }}
-                aria-label="주제어 검색어 지우기"
+                aria-label={uiText.topic.clear}
               >
                 <XIcon aria-hidden />
               </button>
@@ -145,7 +146,7 @@ export default function TopicPicker({
               <li ref={activeItemRef} className={styles.fallbackRow}>
                 <button className={styles.fallbackBtn} onClick={() => onFallbackSearch(query)}>
                   <span className={searchStyles.title}>
-                    일치하는 주제어가 없어요. 글에서 &quot;{query}&quot; 검색
+                    {uiText.topic.fallbackSearch(query)}
                   </span>
                 </button>
               </li>
@@ -167,7 +168,7 @@ export default function TopicPicker({
                       <span className={searchStyles.title}>{highlight(topic.name, query, searchStyles.mark)}</span>
                       <span className={styles.meta}>
                         {isSelected && <CheckIcon className={styles.checkIcon} aria-hidden />}
-                        <span className={searchStyles.topicCount}>{topic.count}개의 글</span>
+                        <span className={searchStyles.topicCount}>{uiText.common.postCount(topic.count)}</span>
                       </span>
                     </button>
                   </li>
@@ -176,10 +177,10 @@ export default function TopicPicker({
             )}
           </ul>
           <div className={searchStyles.hint}>
-            <span>방향키 이동</span>
-            <span>Enter로 선택</span>
-            <span>Ctrl+Enter로 계속 선택</span>
-            <span>Esc로 닫기</span>
+            <span>{uiText.search.hints.move}</span>
+            <span>{uiText.search.hints.select}</span>
+            <span>{uiText.search.hints.multiSelect}</span>
+            <span>{uiText.search.hints.close}</span>
           </div>
         </div>
       </div>

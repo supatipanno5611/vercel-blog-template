@@ -15,6 +15,7 @@ import {
   type SearchResult,
   type TopicResult,
 } from '@/lib/searchIndex'
+import { uiText } from '@/lib/ui-text'
 import SearchResults from './SearchResults'
 import { BackIcon, SearchIcon, XIcon } from './icons'
 import styles from './SearchBox.module.css'
@@ -22,10 +23,10 @@ import styles from './SearchBox.module.css'
 type Filter = 'all' | 'title' | 'body' | 'base'
 
 const FILTER_OPTIONS: { key: Filter; label: string }[] = [
-  { key: 'all', label: '전체' },
-  { key: 'title', label: '제목' },
-  { key: 'body', label: '본문' },
-  { key: 'base', label: '주제어' },
+  { key: 'all', label: uiText.search.filters.all },
+  { key: 'title', label: uiText.search.filters.title },
+  { key: 'body', label: uiText.search.filters.body },
+  { key: 'base', label: uiText.search.filters.base },
 ]
 
 const FILTER_FIELDS: Record<Filter, string[] | undefined> = {
@@ -35,7 +36,6 @@ const FILTER_FIELDS: Record<Filter, string[] | undefined> = {
   base: undefined,
 }
 
-const PLACEHOLDERS = ['글 검색', '주제어 찾기', '제목이나 본문 검색', '무엇을 찾고 있나요?']
 const RESULTS_ID = 'global-search-results'
 
 const noopSubscribe = () => () => {}
@@ -43,11 +43,11 @@ const noopSubscribe = () => () => {}
 let cachedPlaceholder: string | null = null
 const getClientPlaceholder = () => {
   if (cachedPlaceholder === null) {
-    cachedPlaceholder = PLACEHOLDERS[Math.floor(Math.random() * PLACEHOLDERS.length)]
+    cachedPlaceholder = uiText.search.placeholders[Math.floor(Math.random() * uiText.search.placeholders.length)]
   }
   return cachedPlaceholder
 }
-const getServerPlaceholder = () => PLACEHOLDERS[0]
+const getServerPlaceholder = () => uiText.search.placeholders[0]
 
 type Props = {
   overlayMode?: boolean
@@ -275,7 +275,7 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
       >
         <div className={styles.inputWrap}>
           {overlayMode && (
-            <button className={styles.backButton} onClick={close} aria-label="검색 닫기">
+            <button className={styles.backButton} onClick={close} aria-label={uiText.search.close}>
               <BackIcon aria-hidden />
             </button>
           )}
@@ -290,7 +290,7 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
               className={styles.input}
               type="text"
               role="combobox"
-              aria-label="글 검색"
+              aria-label={uiText.search.inputLabel}
               aria-autocomplete="list"
               aria-expanded={showDropdown}
               aria-controls={showDropdown ? RESULTS_ID : undefined}
@@ -304,7 +304,7 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
               spellCheck={false}
             />
             {hasQuery && (
-              <button className={styles.clear} onClick={handleClear} aria-label="검색어 지우기">
+              <button className={styles.clear} onClick={handleClear} aria-label={uiText.search.clear}>
                 <XIcon aria-hidden />
               </button>
             )}
@@ -344,10 +344,10 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
               activeItemRef={activeItemRef}
             />
             <div className={styles.hint}>
-              <span>방향키 이동</span>
-              <span>좌우로 필터 변경</span>
-              <span>Enter로 열기</span>
-              <span>Esc로 닫기</span>
+              <span>{uiText.search.hints.move}</span>
+              <span>{uiText.search.hints.changeFilter}</span>
+              <span>{uiText.search.hints.open}</span>
+              <span>{uiText.search.hints.close}</span>
             </div>
           </div>
         )}

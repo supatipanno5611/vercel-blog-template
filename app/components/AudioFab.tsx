@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { uiText } from '@/lib/ui-text'
 import fabStyles from './Fab.module.css'
 import { PauseIcon, PlayIcon } from './icons'
 import styles from './AudioFab.module.css'
@@ -34,7 +35,7 @@ export default function AudioFab() {
     else audio.pause()
   }
 
-  const label = state === 'playing' ? '일시정지' : '재생'
+  const label = state === 'playing' ? uiText.audio.pause : uiText.audio.play
 
   return (
     <button

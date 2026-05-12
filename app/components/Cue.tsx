@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useId, useRef } from 'react'
+import { uiText } from '@/lib/ui-text'
 import { scrollStartBelowHeader, useCue } from './CueProvider'
 import { PlayIcon } from './icons'
 import styles from './Cue.module.css'
@@ -37,7 +38,7 @@ export default function Cue({ time, label, children }: Props) {
             ctx?.jump(seconds)
             if (ref.current) scrollStartBelowHeader(ref.current)
           }}
-          aria-label={`${label}로 이동`}
+          aria-label={uiText.cue.jumpTo(label)}
         >
           <PlayIcon aria-hidden />
           <span>{label}</span>

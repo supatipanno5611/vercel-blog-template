@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { getHighlightedSnippets, highlight } from '@/lib/highlight'
 import type { SearchResult, TopicResult } from '@/lib/searchIndex'
+import { uiText } from '@/lib/ui-text'
 import styles from './SearchBox.module.css'
 
 function getSearchTerms(result: SearchResult): string[] {
@@ -15,10 +16,10 @@ function getMatchedFields(result: SearchResult): Set<string> {
 
 function getFieldBadges(fields: Set<string>): string[] {
   const badges: string[] = []
-  if (fields.has('title')) badges.push('제목')
-  if (fields.has('body')) badges.push('본문')
-  if (fields.has('audioTitle')) badges.push('오디오')
-  if (fields.has('base')) badges.push('주제어')
+  if (fields.has('title')) badges.push(uiText.search.fieldBadges.title)
+  if (fields.has('body')) badges.push(uiText.search.fieldBadges.body)
+  if (fields.has('audioTitle')) badges.push(uiText.search.fieldBadges.audioTitle)
+  if (fields.has('base')) badges.push(uiText.search.fieldBadges.base)
   return badges
 }
 
@@ -59,9 +60,9 @@ export default function SearchResults({
 }: Props) {
   if (loading) {
     return (
-      <ul id={resultsId} className={styles.results} role="listbox" aria-label="검색 결과">
+      <ul id={resultsId} className={styles.results} role="listbox" aria-label={uiText.search.resultsLabel}>
         <li className={styles.guide} role="status">
-          검색 인덱스를 불러오는 중...
+          {uiText.search.loading}
         </li>
       </ul>
     )
@@ -69,16 +70,16 @@ export default function SearchResults({
 
   if (loadError) {
     return (
-      <ul id={resultsId} className={styles.results} role="listbox" aria-label="검색 결과">
+      <ul id={resultsId} className={styles.results} role="listbox" aria-label={uiText.search.resultsLabel}>
         <li className={styles.empty} role="status">
-          검색을 불러오지 못했어요. 다시 시도해 주세요.
+          {uiText.search.loadError}
         </li>
       </ul>
     )
   }
 
   return (
-    <ul id={resultsId} className={styles.results} role="listbox" aria-label="검색 결과">
+    <ul id={resultsId} className={styles.results} role="listbox" aria-label={uiText.search.resultsLabel}>
       {filter === 'base' ? (
         <>
           {hasQuery &&
@@ -96,7 +97,7 @@ export default function SearchResults({
                 >
                   <Link href={result.url} onClick={onClose}>
                     <span className={styles.title}>{highlight(result.name, query, styles.mark)}</span>
-                    <span className={styles.topicCount}>{result.count}개의 글</span>
+                    <span className={styles.topicCount}>{uiText.common.postCount(result.count)}</span>
                   </Link>
                 </li>
               )
@@ -110,20 +111,20 @@ export default function SearchResults({
             onMouseEnter={() => onActiveChange(topicResults.length)}
           >
             <Link href="/topics/search" onClick={onClose} className={styles.gotoTopicSearch}>
-              주제어 둘러보기
+              {uiText.topic.browse}
             </Link>
           </li>
         </>
       ) : !hasQuery ? (
         <li className={styles.guide} role="status">
-          제목, 본문, 오디오 제목에서 검색합니다.
+          {uiText.search.guide}
         </li>
       ) : results.length === 0 ? (
         <li className={styles.empty} role="status">
-          <span>&quot;{query}&quot;에 대한 결과가 없어요.</span>
+          <span>{uiText.search.noResults(query)}</span>
           {(filter === 'title' || filter === 'body') && (
             <button className={styles.emptyAction} onClick={onTryAll}>
-              전체에서 다시 검색
+              {uiText.search.tryAll}
             </button>
           )}
         </li>
@@ -153,7 +154,7 @@ export default function SearchResults({
                   <span className={styles.resultHeader}>
                     <span className={styles.title}>{highlight(result.title, query, styles.mark, searchTerms)}</span>
                     {fieldBadges.length > 0 && (
-                      <span className={styles.fieldBadges} aria-label={`${fieldBadges.join(', ')}에서 일치`}>
+                      <span className={styles.fieldBadges} aria-label={uiText.search.matchedIn(fieldBadges.join(', '))}>
                         {fieldBadges.map((badge) => (
                           <span key={badge} className={styles.fieldBadge}>
                             {badge}
@@ -164,7 +165,7 @@ export default function SearchResults({
                   </span>
                   {showAudioTitle && (
                     <span className={styles.audioMeta}>
-                      <span className={styles.audioMetaLabel}>오디오</span>
+                      <span className={styles.audioMetaLabel}>{uiText.audio.label}</span>
                       <span>{highlight(result.audioTitle, query, styles.mark, searchTerms)}</span>
                     </span>
                   )}
@@ -187,7 +188,7 @@ export default function SearchResults({
               onMouseEnter={() => onActiveChange(results.length)}
             >
               <button className={styles.viewAllResult} onClick={onViewAllResults}>
-                &quot;{query}&quot; 전체 결과 보기
+                {uiText.search.viewAllResults(query)}
               </button>
             </li>
           )}

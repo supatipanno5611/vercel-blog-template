@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
 import { safeDecodeURIComponent } from '@/lib/safe-decode'
 import { overlapCount, jaccard } from '@/lib/topics'
+import { uiText } from '@/lib/ui-text'
 import TopicPicker from '@/app/components/TopicPicker'
 import { useHideOnScroll } from '@/app/components/useHideOnScroll'
 import { useSearchShortcut } from '@/app/components/hooks/useSearchShortcut'
@@ -97,8 +98,8 @@ export default function TopicsClient({ topic, posts, allTopics, curatedTopics }:
       <button
         className={`${fabStyles.fab} ${searchFabStyles.search} ${pickerVisible ? '' : fabStyles.fabHidden}`}
         onClick={() => setPickerOpen(true)}
-        aria-label="주제어 검색 열기"
-        title="주제어 검색 (Ctrl+K)"
+        aria-label={uiText.topic.openSearch}
+        title={uiText.topic.openSearchWithShortcut}
       >
         <SearchIcon aria-hidden />
       </button>
@@ -119,7 +120,7 @@ export default function TopicsClient({ topic, posts, allTopics, curatedTopics }:
             {selected.map((t, i) => (
               <span key={t} className={`${styles.chip} ${i === 0 ? styles.chipMain : styles.chipExtra}`}>
                 {t}
-                <button className={styles.chipRemove} onClick={() => removeTopic(t)} aria-label={`${t} 제거`}>
+                <button className={styles.chipRemove} onClick={() => removeTopic(t)} aria-label={uiText.topic.removeLabel(t)}>
                   <XIcon aria-hidden />
                 </button>
               </span>
@@ -130,41 +131,41 @@ export default function TopicsClient({ topic, posts, allTopics, curatedTopics }:
 
       {selected.length === 0 && suggestedTopics.length > 0 && (
         <div className={styles.emptyState}>
-          <p className={styles.emptyHint}>{curatedTopics.length > 0 ? '추천 주제어' : '주제어 둘러보기'}</p>
+          <p className={styles.emptyHint}>{curatedTopics.length > 0 ? uiText.topic.recommended : uiText.topic.browse}</p>
           <div className={styles.recommendList}>
             {visibleSuggestedTopics.map((name) => {
               const info = allTopics.find((topicInfo) => topicInfo.name === name)
               return (
                 <button key={name} className={styles.recommendChip} onClick={() => addTopic(name)}>
                   {name}
-                  {info && <span className={styles.recommendCount}>{info.count}개의 글</span>}
+                  {info && <span className={styles.recommendCount}>{uiText.common.postCount(info.count)}</span>}
                 </button>
               )
             })}
           </div>
           {hasMoreSuggestedTopics && (
             <button className={styles.moreBtn} onClick={() => setVisibleTopicCount(visibleTopicCount + TOPIC_PAGE_SIZE)}>
-              더 보기
+              {uiText.common.more}
             </button>
           )}
         </div>
       )}
 
-      {selected.length === 0 && suggestedTopics.length === 0 && <p className={styles.emptyHint}>둘러볼 주제어를 선택해 주세요.</p>}
+      {selected.length === 0 && suggestedTopics.length === 0 && <p className={styles.emptyHint}>{uiText.topic.emptyBrowse}</p>}
 
       {selected.length > 0 && sorted.length === 0 && (
         <p className={styles.empty}>
-          이 주제어 조합에 맞는 글이 없어요.{' '}
+          {uiText.topic.emptyCombination}{' '}
           <button className={styles.resetBtn} onClick={() => router.push('/topics/search')}>
-            검색 초기화
+            {uiText.topic.resetSearch}
           </button>
         </p>
       )}
 
       {selected.length > 0 && sorted.length > 0 && (
         <>
-          {usedFallback && <p className={styles.fallbackNotice}>정확히 일치하는 글이 없어 관련 글을 보여줍니다.</p>}
-          <p className={styles.count}>{sorted.length}개의 글</p>
+          {usedFallback && <p className={styles.fallbackNotice}>{uiText.topic.fallbackNotice}</p>}
+          <p className={styles.count}>{uiText.common.postCount(sorted.length)}</p>
           <ul className={styles.list}>
             {sorted.slice(0, visibleCount).map((p) => (
               <li key={p.slugAsParams}>
@@ -179,7 +180,7 @@ export default function TopicsClient({ topic, posts, allTopics, curatedTopics }:
               className={styles.moreBtn}
               onClick={() => setVisibleState({ key: selectedKey, count: visibleCount + 30 })}
             >
-              더 보기
+              {uiText.common.more}
             </button>
           )}
         </>

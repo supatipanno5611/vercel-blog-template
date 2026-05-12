@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useId, useRef } from 'react'
+import { uiText } from '@/lib/ui-text'
 import { scrollStartBelowHeader, useCue } from './CueProvider'
 import styles from './Chapter.module.css'
 
@@ -36,7 +37,7 @@ export default function Chapter({ time, label, title }: Props) {
             ctx?.jump(seconds)
             if (ref.current) scrollStartBelowHeader(ref.current)
           }}
-        aria-label={`${label} ${title}로 이동`}
+        aria-label={uiText.chapter.jumpTo(label, title)}
       >
         <span className={styles.label}>{label}</span>
         <span className={styles.title}>{title}</span>

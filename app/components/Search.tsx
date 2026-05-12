@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
+import { uiText } from '@/lib/ui-text'
 import SearchBox from './SearchBox'
 import { useHideOnScroll } from './useHideOnScroll'
 import { useSearchShortcut } from './hooks/useSearchShortcut'
@@ -53,8 +54,8 @@ export default function Search() {
         <button
           className={`${fabStyles.fab} ${styles.search} ${visible ? '' : fabStyles.fabHidden}`}
           onClick={openSearch}
-          aria-label="검색 열기"
-          title="검색 (Ctrl+K)"
+          aria-label={uiText.search.open}
+          title={uiText.search.openWithShortcut}
         >
           <SearchIcon aria-hidden />
         </button>

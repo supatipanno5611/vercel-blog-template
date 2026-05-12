@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import type { TocItem } from '@/lib/heading-toc'
+import { uiText } from '@/lib/ui-text'
 import ChapterMenu from './ChapterMenu'
 import { RepeatIcon } from './icons'
 import TocMenu from './TocMenu'
@@ -34,9 +35,9 @@ export default function Header({ title, showAudioRepeat, tocItems }: Props) {
             type="button"
             className={`${styles.repeatToggle} ${loop ? styles.repeatOn : ''}`}
             onClick={() => setLoop((value) => !value)}
-            aria-label={loop ? '반복 재생 끄기' : '반복 재생 켜기'}
+            aria-label={loop ? uiText.audio.repeatOff : uiText.audio.repeatOn}
             aria-pressed={loop}
-            title={loop ? '반복 재생 끄기' : '반복 재생 켜기'}
+            title={loop ? uiText.audio.repeatOff : uiText.audio.repeatOn}
           >
             <RepeatIcon aria-hidden />
           </button>

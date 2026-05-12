@@ -5,6 +5,7 @@ import ReactMarkdown, { defaultUrlTransform, type Components, type UrlTransform 
 import remarkGfm from 'remark-gfm'
 import { isSafeHref } from '@/lib/markdown-security'
 import { slugifyHeading, uniqueHeadingId } from '@/lib/heading-toc'
+import { uiText } from '@/lib/ui-text'
 import { remarkCallout } from '@/lib/remark-callout'
 import { remarkChapter } from '@/lib/remark-chapter'
 import { remarkCue } from '@/lib/remark-cue'
@@ -35,8 +36,8 @@ function CopyHeadingLink({ id }: { id: string }) {
     <button
       type="button"
       className="heading-copy"
-      aria-label="헤딩 링크 복사"
-      title={copied ? '복사됨' : '헤딩 링크 복사'}
+      aria-label={uiText.heading.copyLink}
+      title={copied ? uiText.heading.copied : uiText.heading.copyLink}
       onClick={async () => {
         const url = decodeURI(`${window.location.origin}${window.location.pathname}#${id}`)
         await navigator.clipboard.writeText(url)

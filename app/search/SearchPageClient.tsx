@@ -11,12 +11,13 @@ import {
   type SearchFilter,
   type SearchResult,
 } from '@/lib/searchIndex'
+import { uiText } from '@/lib/ui-text'
 import styles from './page.module.css'
 
 const FILTER_OPTIONS: { key: SearchFilter; label: string }[] = [
-  { key: 'all', label: '전체' },
-  { key: 'title', label: '제목' },
-  { key: 'body', label: '본문' },
+  { key: 'all', label: uiText.search.filters.all },
+  { key: 'title', label: uiText.search.filters.title },
+  { key: 'body', label: uiText.search.filters.body },
 ]
 
 function readFilter(value: string | null): SearchFilter {
@@ -87,7 +88,9 @@ export default function SearchPageClient() {
 
   return (
     <main className={styles.main}>
-      <h1 className={styles.heading}>{urlQuery ? `“${urlQuery}” 검색 결과` : '검색 결과'}</h1>
+      <h1 className={styles.heading}>
+        {urlQuery ? uiText.search.headingForQuery(urlQuery) : uiText.search.heading}
+      </h1>
       <div className={styles.filters}>
         {FILTER_OPTIONS.map((option) => (
           <button
@@ -102,16 +105,16 @@ export default function SearchPageClient() {
       </div>
 
       {!urlQuery ? (
-        <p className={styles.status}>제목, 본문, 오디오 제목에서 검색합니다.</p>
+        <p className={styles.status}>{uiText.search.guide}</p>
       ) : loading ? (
-        <p className={styles.status}>검색 인덱스를 불러오는 중...</p>
+        <p className={styles.status}>{uiText.search.loading}</p>
       ) : loadError ? (
-        <p className={styles.status}>검색을 불러오지 못했어요. 다시 시도해 주세요.</p>
+        <p className={styles.status}>{uiText.search.loadError}</p>
       ) : (
         <>
-          <p className={styles.count}>{results.length}개의 결과</p>
+          <p className={styles.count}>{uiText.search.resultCount(results.length)}</p>
           {results.length === 0 ? (
-            <p className={styles.status}>&quot;{urlQuery}&quot;에 대한 결과가 없어요.</p>
+            <p className={styles.status}>{uiText.search.noResults(urlQuery)}</p>
           ) : (
             <ul className={styles.results}>
               {results.map((result) => {
@@ -123,7 +126,7 @@ export default function SearchPageClient() {
                       <span className={styles.title}>{highlight(result.title, urlQuery, styles.mark, terms)}</span>
                       {result.audioTitle && (
                         <span className={styles.audioMeta}>
-                          <span className={styles.audioLabel}>오디오</span>
+                          <span className={styles.audioLabel}>{uiText.audio.label}</span>
                           <span>{highlight(result.audioTitle, urlQuery, styles.mark, terms)}</span>
                         </span>
                       )}

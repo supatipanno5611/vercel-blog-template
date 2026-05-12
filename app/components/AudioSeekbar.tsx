@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { uiText } from '@/lib/ui-text'
 import styles from './AudioSeekbar.module.css'
 import { useCue, type YTPlayer } from './CueProvider'
 
@@ -74,7 +75,7 @@ export default function AudioSeekbar() {
         onPointerCancel={() => { seekingRef.current = false }}
         onInput={onInput}
         onChange={onInput}
-        aria-label="오디오 재생 위치"
+        aria-label={uiText.audio.seek}
         style={{ '--p': progress } as React.CSSProperties}
       />
     </div>

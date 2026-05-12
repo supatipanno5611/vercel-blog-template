@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { TocItem } from '@/lib/heading-toc'
+import { uiText } from '@/lib/ui-text'
 import { scrollStartBelowHeader } from './CueProvider'
 import { useClickOutside } from './hooks/useClickOutside'
 import { ListIcon } from './icons'
@@ -34,9 +35,9 @@ export default function TocMenu({ items = [] }: Props) {
         type="button"
         className={`${styles.btn} ${open ? styles.btnActive : ''}`}
         onClick={() => setOpen((value) => !value)}
-        aria-label="본문 목차"
+        aria-label={uiText.toc.label}
         aria-expanded={open}
-        title="본문 목차"
+        title={uiText.toc.label}
       >
         <ListIcon aria-hidden />
       </button>
