@@ -7,7 +7,7 @@ export function useSearchShortcut(callback: () => void, enabled = true) {
     if (!enabled) return
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() !== 'k' || !e.ctrlKey) return
+      if (e.key.toLowerCase() !== 'k' || (!e.ctrlKey && !e.metaKey)) return
       const tag = (document.activeElement as HTMLElement | null)?.tagName
       if (tag === 'INPUT' || tag === 'TEXTAREA') return
       e.preventDefault()

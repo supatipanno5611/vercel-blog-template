@@ -102,9 +102,9 @@ export default function TopicPicker({
   return (
     <>
       {mounted && createPortal(<div className={searchStyles.overlayBackdrop} onClick={close} />, document.body)}
-      <div className={`${searchStyles.container} ${searchStyles.overlayContainer}`} role="dialog" aria-modal="true" aria-label="Topic search">
+      <div className={`${searchStyles.container} ${searchStyles.overlayContainer}`} role="dialog" aria-modal="true" aria-label="주제어 검색">
         <div className={searchStyles.inputWrap}>
-          <button className={searchStyles.backButton} onClick={close} aria-label="Close topic search">
+          <button className={searchStyles.backButton} onClick={close} aria-label="주제어 검색 닫기">
             <BackIcon aria-hidden />
           </button>
           <div className={searchStyles.inputField}>
@@ -113,7 +113,7 @@ export default function TopicPicker({
               ref={inputRef}
               className={searchStyles.input}
               type="text"
-              placeholder="Search topics"
+              placeholder="주제어 찾기"
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value)
@@ -132,7 +132,7 @@ export default function TopicPicker({
                   setActiveIndex(0)
                   inputRef.current?.focus()
                 }}
-                aria-label="Clear topic search"
+                aria-label="주제어 검색어 지우기"
               >
                 <XIcon aria-hidden />
               </button>
@@ -144,7 +144,9 @@ export default function TopicPicker({
             {showFallback ? (
               <li ref={activeItemRef} className={styles.fallbackRow}>
                 <button className={styles.fallbackBtn} onClick={() => onFallbackSearch(query)}>
-                  <span className={searchStyles.title}>Search all posts for &quot;{query}&quot;</span>
+                  <span className={searchStyles.title}>
+                    일치하는 주제어가 없어요. 글에서 &quot;{query}&quot; 검색
+                  </span>
                 </button>
               </li>
             ) : (
@@ -165,7 +167,7 @@ export default function TopicPicker({
                       <span className={searchStyles.title}>{highlight(topic.name, query, searchStyles.mark)}</span>
                       <span className={styles.meta}>
                         {isSelected && <CheckIcon className={styles.checkIcon} aria-hidden />}
-                        <span className={searchStyles.topicCount}>{topic.count} posts</span>
+                        <span className={searchStyles.topicCount}>{topic.count}개의 글</span>
                       </span>
                     </button>
                   </li>
@@ -174,10 +176,10 @@ export default function TopicPicker({
             )}
           </ul>
           <div className={searchStyles.hint}>
-            <span>Arrows move</span>
-            <span>Enter select</span>
-            <span>Ctrl+Enter keep open</span>
-            <span>Esc close</span>
+            <span>방향키 이동</span>
+            <span>Enter로 선택</span>
+            <span>Ctrl+Enter로 계속 선택</span>
+            <span>Esc로 닫기</span>
           </div>
         </div>
       </div>

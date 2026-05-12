@@ -67,13 +67,13 @@ export default async function PostPage({ params }: Props) {
           <footer className={styles.footer}>
             {post.audioTitle && (
               <div className={styles.audioBlock}>
-                <p className={styles.footerLabel}>Audio</p>
+                <p className={styles.footerLabel}>오디오</p>
                 <p className={styles.audioTitle}>{post.audioTitle}</p>
               </div>
             )}
             {post.base.length > 0 && (
               <div className={styles.topicsBlock}>
-                <p className={styles.footerLabel}>Topics</p>
+                <p className={styles.footerLabel}>주제어</p>
                 <ul className={styles.topicChipList}>
                   {post.base.map((base) => (
                     <li key={base}>
@@ -87,7 +87,7 @@ export default async function PostPage({ params }: Props) {
             )}
             {relatedPosts.length > 0 && (
               <div>
-                <p className={styles.footerLabel}>Related posts</p>
+                <p className={styles.footerLabel}>관련 글</p>
                 <ul className={styles.relatedList}>
                   {relatedPosts.map((p) => (
                     <li key={p.slug}>
@@ -101,7 +101,7 @@ export default async function PostPage({ params }: Props) {
             )}
             {backlinks.length > 0 && (
               <div>
-                <p className={styles.footerLabel}>Backlinks</p>
+                <p className={styles.footerLabel}>백링크</p>
                 <ul className={styles.relatedList}>
                   {backlinks.map((p) => (
                     <li key={p.slug}>

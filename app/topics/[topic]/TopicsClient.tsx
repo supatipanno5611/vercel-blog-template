@@ -97,8 +97,8 @@ export default function TopicsClient({ topic, posts, allTopics, curatedTopics }:
       <button
         className={`${fabStyles.fab} ${searchFabStyles.search} ${pickerVisible ? '' : fabStyles.fabHidden}`}
         onClick={() => setPickerOpen(true)}
-        aria-label="Open topic search"
-        title="Topic search (Ctrl+K)"
+        aria-label="주제어 검색 열기"
+        title="주제어 검색 (Ctrl+K)"
       >
         <SearchIcon aria-hidden />
       </button>
@@ -119,7 +119,7 @@ export default function TopicsClient({ topic, posts, allTopics, curatedTopics }:
             {selected.map((t, i) => (
               <span key={t} className={`${styles.chip} ${i === 0 ? styles.chipMain : styles.chipExtra}`}>
                 {t}
-                <button className={styles.chipRemove} onClick={() => removeTopic(t)} aria-label={`Remove ${t}`}>
+                <button className={styles.chipRemove} onClick={() => removeTopic(t)} aria-label={`${t} 제거`}>
                   <XIcon aria-hidden />
                 </button>
               </span>
@@ -130,41 +130,41 @@ export default function TopicsClient({ topic, posts, allTopics, curatedTopics }:
 
       {selected.length === 0 && suggestedTopics.length > 0 && (
         <div className={styles.emptyState}>
-          <p className={styles.emptyHint}>{curatedTopics.length > 0 ? 'Recommended topics' : 'Browse topics'}</p>
+          <p className={styles.emptyHint}>{curatedTopics.length > 0 ? '추천 주제어' : '주제어 둘러보기'}</p>
           <div className={styles.recommendList}>
             {visibleSuggestedTopics.map((name) => {
               const info = allTopics.find((topicInfo) => topicInfo.name === name)
               return (
                 <button key={name} className={styles.recommendChip} onClick={() => addTopic(name)}>
                   {name}
-                  {info && <span className={styles.recommendCount}>{info.count} posts</span>}
+                  {info && <span className={styles.recommendCount}>{info.count}개의 글</span>}
                 </button>
               )
             })}
           </div>
           {hasMoreSuggestedTopics && (
             <button className={styles.moreBtn} onClick={() => setVisibleTopicCount(visibleTopicCount + TOPIC_PAGE_SIZE)}>
-              Show more
+              더 보기
             </button>
           )}
         </div>
       )}
 
-      {selected.length === 0 && suggestedTopics.length === 0 && <p className={styles.emptyHint}>Select a topic to browse posts.</p>}
+      {selected.length === 0 && suggestedTopics.length === 0 && <p className={styles.emptyHint}>둘러볼 주제어를 선택해 주세요.</p>}
 
       {selected.length > 0 && sorted.length === 0 && (
         <p className={styles.empty}>
-          No posts match this topic set.{' '}
+          이 주제어 조합에 맞는 글이 없어요.{' '}
           <button className={styles.resetBtn} onClick={() => router.push('/topics/search')}>
-            Reset search
+            검색 초기화
           </button>
         </p>
       )}
 
       {selected.length > 0 && sorted.length > 0 && (
         <>
-          {usedFallback && <p className={styles.fallbackNotice}>No exact match. Showing related posts instead.</p>}
-          <p className={styles.count}>{sorted.length} posts</p>
+          {usedFallback && <p className={styles.fallbackNotice}>정확히 일치하는 글이 없어 관련 글을 보여줍니다.</p>}
+          <p className={styles.count}>{sorted.length}개의 글</p>
           <ul className={styles.list}>
             {sorted.slice(0, visibleCount).map((p) => (
               <li key={p.slugAsParams}>
@@ -179,7 +179,7 @@ export default function TopicsClient({ topic, posts, allTopics, curatedTopics }:
               className={styles.moreBtn}
               onClick={() => setVisibleState({ key: selectedKey, count: visibleCount + 30 })}
             >
-              Show more
+              더 보기
             </button>
           )}
         </>

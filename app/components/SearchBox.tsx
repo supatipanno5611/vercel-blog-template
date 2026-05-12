@@ -8,6 +8,8 @@ import { useSearchShortcut } from './hooks/useSearchShortcut'
 import {
   loadIndex,
   isIndexReady,
+  MAX_RESULTS,
+  SEARCH_FIELDS,
   searchDocs,
   searchTopics,
   type SearchResult,
@@ -20,20 +22,21 @@ import styles from './SearchBox.module.css'
 type Filter = 'all' | 'title' | 'body' | 'base'
 
 const FILTER_OPTIONS: { key: Filter; label: string }[] = [
-  { key: 'all', label: 'All' },
-  { key: 'title', label: 'Title' },
-  { key: 'body', label: 'Body' },
-  { key: 'base', label: 'Topic' },
+  { key: 'all', label: '전체' },
+  { key: 'title', label: '제목' },
+  { key: 'body', label: '본문' },
+  { key: 'base', label: '주제어' },
 ]
 
 const FILTER_FIELDS: Record<Filter, string[] | undefined> = {
-  all: undefined,
-  title: ['title'],
-  body: ['body'],
-  base: ['base'],
+  all: [...SEARCH_FIELDS.all],
+  title: [...SEARCH_FIELDS.title],
+  body: [...SEARCH_FIELDS.body],
+  base: undefined,
 }
 
-const PLACEHOLDERS = ['Search posts', 'Find a topic', 'Search title or body', 'What are you looking for?']
+const PLACEHOLDERS = ['글 검색', '주제어 찾기', '제목이나 본문 검색', '무엇을 찾고 있나요?']
+const RESULTS_ID = 'global-search-results'
 
 const noopSubscribe = () => () => {}
 
@@ -60,6 +63,8 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
   const [filter, setFilter] = useState<Filter>('all')
   const [focused, setFocused] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [loadError, setLoadError] = useState(false)
+  const [hasMoreResults, setHasMoreResults] = useState(false)
 
   const mounted = useSyncExternalStore(noopSubscribe, () => true, () => false)
   const placeholder = useSyncExternalStore(noopSubscribe, getClientPlaceholder, getServerPlaceholder)
@@ -81,6 +86,7 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
     setResults([])
     setTopicResults([])
     setActiveIndex(-1)
+    setHasMoreResults(false)
   }, [])
 
   const doSearch = useCallback((q: string, f: Filter) => {
@@ -88,6 +94,7 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
 
     if (f === 'base') {
       setResults([])
+      setHasMoreResults(false)
       const res = searchTopics(q)
       setTopicResults(res)
       setActiveIndex(res.length > 0 ? 0 : -1)
@@ -95,9 +102,11 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
     }
 
     setTopicResults([])
-    const res = searchDocs(q, FILTER_FIELDS[f])
-    setResults(res)
-    setActiveIndex(res.length > 0 ? 0 : -1)
+    const res = searchDocs(q, FILTER_FIELDS[f], MAX_RESULTS + 1)
+    const visibleResults = res.slice(0, MAX_RESULTS)
+    setResults(visibleResults)
+    setHasMoreResults(res.length > MAX_RESULTS)
+    setActiveIndex(visibleResults.length > 0 ? 0 : -1)
   }, [])
 
   useEffect(() => {
@@ -137,6 +146,7 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
 
   const handleFocus = () => {
     setFocused(true)
+    setLoadError(false)
     if (isIndexReady()) {
       if (queryRef.current.trim()) doSearch(queryRef.current, filterRef.current)
       return
@@ -148,6 +158,7 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
         if (queryRef.current.trim()) doSearch(queryRef.current, filterRef.current)
       })
       .catch(() => {
+        setLoadError(true)
         resetResults()
       })
       .finally(() => {
@@ -178,7 +189,7 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
     if (queryRef.current.trim()) doSearch(queryRef.current, f)
   }
 
-  const activeListLength = filter === 'base' ? topicResults.length + 1 : results.length
+  const activeListLength = filter === 'base' ? topicResults.length + 1 : results.length + (hasMoreResults ? 1 : 0)
 
   const rotateFilter = (dir: 1 | -1) => {
     setFilter((f) => {
@@ -217,6 +228,9 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
       } else if (results[idx]) {
         router.push(results[idx].url)
         close()
+      } else if (hasMoreResults && idx === results.length) {
+        router.push(`/search?q=${encodeURIComponent(queryRef.current.trim())}&filter=${filter}`)
+        close()
       }
     } else if (e.key === 'Escape') {
       close()
@@ -229,8 +243,21 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
     inputRef.current?.focus()
   }
 
+  const tryAll = () => {
+    setFilter('all')
+    if (queryRef.current.trim()) doSearch(queryRef.current, 'all')
+  }
+
+  const viewAllResults = () => {
+    const q = queryRef.current.trim()
+    if (!q) return
+    router.push(`/search?q=${encodeURIComponent(q)}&filter=${filter}`)
+    close()
+  }
+
   const hasQuery = query.trim() !== ''
   const showDropdown = overlayMode || (focused && hasQuery)
+  const activeOptionId = activeIndex >= 0 && activeListLength > 0 ? `${RESULTS_ID}-option-${activeIndex}` : undefined
 
   return (
     <>
@@ -248,7 +275,7 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
       >
         <div className={styles.inputWrap}>
           {overlayMode && (
-            <button className={styles.backButton} onClick={close} aria-label="Close search">
+            <button className={styles.backButton} onClick={close} aria-label="검색 닫기">
               <BackIcon aria-hidden />
             </button>
           )}
@@ -262,6 +289,12 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
               ref={inputRef}
               className={styles.input}
               type="text"
+              role="combobox"
+              aria-label="글 검색"
+              aria-autocomplete="list"
+              aria-expanded={showDropdown}
+              aria-controls={showDropdown ? RESULTS_ID : undefined}
+              aria-activedescendant={activeOptionId}
               placeholder={placeholder}
               value={query}
               onChange={handleChange}
@@ -271,7 +304,7 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
               spellCheck={false}
             />
             {hasQuery && (
-              <button className={styles.clear} onClick={handleClear} aria-label="Clear search">
+              <button className={styles.clear} onClick={handleClear} aria-label="검색어 지우기">
                 <XIcon aria-hidden />
               </button>
             )}
@@ -294,21 +327,27 @@ export default function SearchBox({ overlayMode = false, onClose, initialQuery }
               ))}
             </div>
             <SearchResults
+              resultsId={RESULTS_ID}
               filter={filter}
               query={query}
               hasQuery={hasQuery}
               results={results}
               topicResults={topicResults}
               activeIndex={activeIndex}
+              hasMoreResults={hasMoreResults}
+              loading={loading}
+              loadError={loadError}
               onActiveChange={setActiveIndex}
               onClose={close}
+              onTryAll={tryAll}
+              onViewAllResults={viewAllResults}
               activeItemRef={activeItemRef}
             />
             <div className={styles.hint}>
-              <span>Arrows move</span>
-              <span>Left/right filter</span>
-              <span>Enter open</span>
-              <span>Esc close</span>
+              <span>방향키 이동</span>
+              <span>좌우로 필터 변경</span>
+              <span>Enter로 열기</span>
+              <span>Esc로 닫기</span>
             </div>
           </div>
         )}

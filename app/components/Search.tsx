@@ -53,8 +53,8 @@ export default function Search() {
         <button
           className={`${fabStyles.fab} ${styles.search} ${visible ? '' : fabStyles.fabHidden}`}
           onClick={openSearch}
-          aria-label="Open search"
-          title="Search (Ctrl+K)"
+          aria-label="검색 열기"
+          title="검색 (Ctrl+K)"
         >
           <SearchIcon aria-hidden />
         </button>

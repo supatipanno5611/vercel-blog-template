@@ -34,9 +34,9 @@ export default function Header({ title, showAudioRepeat, tocItems }: Props) {
             type="button"
             className={`${styles.repeatToggle} ${loop ? styles.repeatOn : ''}`}
             onClick={() => setLoop((value) => !value)}
-            aria-label={loop ? 'Disable repeat' : 'Enable repeat'}
+            aria-label={loop ? '반복 재생 끄기' : '반복 재생 켜기'}
             aria-pressed={loop}
-            title={loop ? 'Disable repeat' : 'Enable repeat'}
+            title={loop ? '반복 재생 끄기' : '반복 재생 켜기'}
           >
             <RepeatIcon aria-hidden />
           </button>
