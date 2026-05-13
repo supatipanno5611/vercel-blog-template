@@ -1,5 +1,5 @@
 export const siteConfig = {
-  title: 'sakko',
+  title: '',
   description: '',
   VAULT_PUBLISH: '_publish',
   homeSlug: 'home',
