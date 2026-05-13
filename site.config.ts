@@ -1,7 +1,7 @@
 export const siteConfig = {
   title: 'sakko',
   description: '',
-  VAULT_PUBLISH: 'C:\\Markdown\\medicine\\sakko',
+  VAULT_PUBLISH: '_publish',
   homeSlug: 'home',
   curatedTopicSourceTitles: [] as string[],
   contentDoctor: {
