@@ -66,6 +66,10 @@ export const uiText = {
     repeatOn: '반복 재생 켜기',
     repeatOff: '반복 재생 끄기',
   },
+  fullscreen: {
+    enter: '전체화면 켜기',
+    exit: '전체화면 끄기',
+  },
   toc: {
     label: '본문 목차',
   },

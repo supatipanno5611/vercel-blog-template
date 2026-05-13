@@ -51,12 +51,13 @@ export default async function PostPage({ params }: Props) {
     .slice(0, 5)
   const hasFooter = Boolean(post.audioTitle) || post.base.length > 0 || relatedPosts.length > 0 || backlinks.length > 0
   const enableHeadingAnchors = !post.youtubeId && !post.audioSrc
+  const showChapterMenu = Boolean(post.youtubeId || post.audioSrc)
   const tocItems = enableHeadingAnchors ? extractTocItems(post.body) : []
 
   return (
     <CueProvider>
       <main className={styles.main} data-has-audio={post.hasAudio || undefined}>
-        <Header title={post.title} showAudioRepeat={post.hasAudio} tocItems={tocItems} />
+        <Header title={post.title} showChapterMenu={showChapterMenu} showAudioRepeat={post.hasAudio} tocItems={tocItems} />
         {post.hasAudio && <AudioSeekbar />}
         {post.youtubeId && <YouTubeEmbed id={post.youtubeId} />}
         {post.audioSrc && <audio src={post.audioSrc} preload="metadata" />}

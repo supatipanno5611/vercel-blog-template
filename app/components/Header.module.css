@@ -41,7 +41,7 @@
   gap: 2px;
 }
 
-.repeatToggle {
+.headerButton {
   width: 36px;
   height: 36px;
   border: none;
@@ -56,16 +56,16 @@
   transition: color 0.2s ease, background 0.2s ease;
 }
 
-.repeatToggle:hover {
+.headerButton:hover {
   background: color-mix(in srgb, var(--color-text) 7%, transparent);
 }
 
-.repeatToggle svg {
+.headerButton svg {
   width: 20px;
   height: 20px;
 }
 
-.repeatOn {
+.headerButtonOn {
   color: var(--color-accent);
   background: color-mix(in srgb, var(--color-accent) 10%, transparent);
 }

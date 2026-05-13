@@ -3,6 +3,8 @@ export {
   Check as CheckIcon,
   Link as LinkIcon,
   List as ListIcon,
+  Maximize2 as MaximizeIcon,
+  Minimize2 as MinimizeIcon,
   Pause as PauseIcon,
   Play as PlayIcon,
   Repeat2 as RepeatIcon,
