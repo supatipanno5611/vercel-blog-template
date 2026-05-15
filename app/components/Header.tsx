@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import type { TocItem } from '@/lib/heading-toc'
 import { uiText } from '@/lib/ui-text'
 import ChapterMenu from './ChapterMenu'
-import { MaximizeIcon, MinimizeIcon, RepeatIcon, TextSizeIcon } from './icons'
+import { MaximizeIcon, RepeatIcon, TextSizeIcon } from './icons'
 import TocMenu from './TocMenu'
 import styles from './Header.module.css'
 
@@ -110,7 +110,7 @@ export default function Header({ title, showChapterMenu, showAudioRepeat, tocIte
             aria-pressed={fullscreen}
             title={fullscreen ? uiText.fullscreen.exit : uiText.fullscreen.enter}
           >
-            {fullscreen ? <MinimizeIcon aria-hidden /> : <MaximizeIcon aria-hidden />}
+            <MaximizeIcon aria-hidden />
           </button>
         )}
         <TocMenu items={tocItems} />
