@@ -125,7 +125,7 @@ article strong {
 article a {
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: var(--color-border);
+  text-decoration-color: var(--color-accent);
 }
 
 article a:hover {
@@ -251,7 +251,7 @@ article mark {
   color: var(--color-accent);
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: var(--border);
+  text-decoration-color: var(--color-accent);
 }
 
 .wiki-link:hover {
