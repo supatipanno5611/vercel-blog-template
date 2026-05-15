@@ -1,4 +1,5 @@
 export {
+  ALargeSmall as TextSizeIcon,
   ChevronLeft as BackIcon,
   Check as CheckIcon,
   Link as LinkIcon,

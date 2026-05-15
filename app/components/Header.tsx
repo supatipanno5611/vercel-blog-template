@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react'
 import type { TocItem } from '@/lib/heading-toc'
 import { uiText } from '@/lib/ui-text'
 import ChapterMenu from './ChapterMenu'
-import { MaximizeIcon, MinimizeIcon, RepeatIcon } from './icons'
+import { MaximizeIcon, MinimizeIcon, RepeatIcon, TextSizeIcon } from './icons'
 import TocMenu from './TocMenu'
 import styles from './Header.module.css'
+
+const LARGE_TEXT_STORAGE_KEY = 'blog-large-text'
 
 type Props = {
   title?: string
@@ -16,9 +18,18 @@ type Props = {
 }
 
 export default function Header({ title, showChapterMenu, showAudioRepeat, tocItems }: Props) {
+  const [largeText, setLargeText] = useState(false)
   const [loop, setLoop] = useState(false)
   const [fullscreenSupported, setFullscreenSupported] = useState(false)
   const [fullscreen, setFullscreen] = useState(false)
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setLargeText(document.documentElement.dataset.largeText === 'true')
+    }, 0)
+
+    return () => window.clearTimeout(timer)
+  }, [])
 
   useEffect(() => {
     if (!showAudioRepeat) return
@@ -28,15 +39,20 @@ export default function Header({ title, showChapterMenu, showAudioRepeat, tocIte
   }, [loop, showAudioRepeat])
 
   useEffect(() => {
-    setFullscreenSupported(Boolean(document.fullscreenEnabled && document.documentElement.requestFullscreen))
-
     const onFullscreenChange = () => {
       setFullscreen(Boolean(document.fullscreenElement))
     }
 
-    onFullscreenChange()
+    const timer = window.setTimeout(() => {
+      setFullscreenSupported(Boolean(document.fullscreenEnabled && document.documentElement.requestFullscreen))
+      onFullscreenChange()
+    }, 0)
+
     document.addEventListener('fullscreenchange', onFullscreenChange)
-    return () => document.removeEventListener('fullscreenchange', onFullscreenChange)
+    return () => {
+      window.clearTimeout(timer)
+      document.removeEventListener('fullscreenchange', onFullscreenChange)
+    }
   }, [])
 
   const toggleFullscreen = async () => {
@@ -51,10 +67,52 @@ export default function Header({ title, showChapterMenu, showAudioRepeat, tocIte
     }
   }
 
+  const toggleLargeText = () => {
+    setLargeText((value) => {
+      const next = !value
+
+      if (next) {
+        document.documentElement.dataset.largeText = 'true'
+        try {
+          localStorage.setItem(LARGE_TEXT_STORAGE_KEY, 'true')
+        } catch {}
+      } else {
+        delete document.documentElement.dataset.largeText
+        try {
+          localStorage.removeItem(LARGE_TEXT_STORAGE_KEY)
+        } catch {}
+      }
+
+      return next
+    })
+  }
+
   return (
     <header className={styles.header}>
       {title && <span className={styles.pageTitle}>{title}</span>}
       <div className={styles.rightControls}>
+        <button
+          type="button"
+          className={`${styles.headerButton} ${largeText ? styles.headerButtonOn : ''}`}
+          onClick={toggleLargeText}
+          aria-label={largeText ? uiText.textSize.reset : uiText.textSize.increase}
+          aria-pressed={largeText}
+          title={largeText ? uiText.textSize.reset : uiText.textSize.increase}
+        >
+          <TextSizeIcon aria-hidden />
+        </button>
+        {fullscreenSupported && (
+          <button
+            type="button"
+            className={`${styles.headerButton} ${fullscreen ? styles.headerButtonOn : ''}`}
+            onClick={toggleFullscreen}
+            aria-label={fullscreen ? uiText.fullscreen.exit : uiText.fullscreen.enter}
+            aria-pressed={fullscreen}
+            title={fullscreen ? uiText.fullscreen.exit : uiText.fullscreen.enter}
+          >
+            {fullscreen ? <MinimizeIcon aria-hidden /> : <MaximizeIcon aria-hidden />}
+          </button>
+        )}
         <TocMenu items={tocItems} />
         {showChapterMenu && <ChapterMenu />}
         {showAudioRepeat && (
@@ -67,18 +125,6 @@ export default function Header({ title, showChapterMenu, showAudioRepeat, tocIte
             title={loop ? uiText.audio.repeatOff : uiText.audio.repeatOn}
           >
             <RepeatIcon aria-hidden />
-          </button>
-        )}
-        {fullscreenSupported && (
-          <button
-            type="button"
-            className={`${styles.headerButton} ${fullscreen ? styles.headerButtonOn : ''}`}
-            onClick={toggleFullscreen}
-            aria-label={fullscreen ? uiText.fullscreen.exit : uiText.fullscreen.enter}
-            aria-pressed={fullscreen}
-            title={fullscreen ? uiText.fullscreen.exit : uiText.fullscreen.enter}
-          >
-            {fullscreen ? <MinimizeIcon aria-hidden /> : <MaximizeIcon aria-hidden />}
           </button>
         )}
       </div>

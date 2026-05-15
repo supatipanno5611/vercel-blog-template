@@ -70,6 +70,10 @@ export const uiText = {
     enter: '전체화면 켜기',
     exit: '전체화면 끄기',
   },
+  textSize: {
+    increase: '글자 크게',
+    reset: '기본 글자 크기',
+  },
   toc: {
     label: '본문 목차',
   },

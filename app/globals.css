@@ -65,6 +65,7 @@
   --code-inline-bg: var(--color-hover);
   --code-block-bg: #111111;
   --code-block-text: #ededed;
+  --article-large-font-size: 19px;
 
   --bg: var(--color-bg);
   --text: var(--color-text);
@@ -88,6 +89,10 @@
 
 html {
   font-size: 17px;
+}
+
+html[data-large-text='true'] article {
+  font-size: var(--article-large-font-size);
 }
 
 body {
@@ -136,9 +141,9 @@ article h4 {
   font-weight: 700;
 }
 
-article h2 { font-size: 1.25rem; }
-article h3 { font-size: 1.05rem; }
-article h4 { font-size: 1rem; }
+article h2 { font-size: 1.25em; }
+article h3 { font-size: 1.05em; }
+article h4 { font-size: 1em; }
 
 article .heading-anchor {
   display: flex;
@@ -264,7 +269,7 @@ article mark {
 }
 
 .callout-title {
-  font-size: 0.8rem;
+  font-size: 0.8em;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -275,7 +280,7 @@ article mark {
 
 .callout-body {
   padding: 0.85em 1em;
-  font-size: 0.95rem;
+  font-size: 0.95em;
 }
 
 .callout-body > p:last-child {

@@ -14,6 +14,16 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 }
 
+const largeTextScript = `
+try {
+  if (localStorage.getItem('blog-large-text') === 'true') {
+    document.documentElement.dataset.largeText = 'true'
+  } else {
+    delete document.documentElement.dataset.largeText
+  }
+} catch {}
+`
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -22,6 +32,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
+        <script dangerouslySetInnerHTML={{ __html: largeTextScript }} />
         <ScrollProgress />
         {children}
         <ShareFab />
