@@ -90,7 +90,7 @@ export default function Header({ title, showChapterMenu, showAudioRepeat, tocIte
   return (
     <header className={styles.header}>
       {title && <span className={styles.pageTitle}>{title}</span>}
-      <div className={styles.rightControls}>
+      <div className={styles.leftControls}>
         <button
           type="button"
           className={`${styles.headerButton} ${largeText ? styles.headerButtonOn : ''}`}
@@ -101,6 +101,8 @@ export default function Header({ title, showChapterMenu, showAudioRepeat, tocIte
         >
           <TextSizeIcon aria-hidden />
         </button>
+      </div>
+      <div className={styles.rightControls}>
         {fullscreenSupported && (
           <button
             type="button"
