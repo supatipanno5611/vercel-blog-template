@@ -1,7 +1,9 @@
 export {
   ALargeSmall as TextSizeIcon,
+  BookOpen as BookOpenIcon,
   ChevronLeft as BackIcon,
   Check as CheckIcon,
+  House as HomeIcon,
   Link as LinkIcon,
   List as ListIcon,
   Maximize as MaximizeIcon,

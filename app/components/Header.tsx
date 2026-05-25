@@ -1,10 +1,11 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import type { TocItem } from '@/lib/heading-toc'
 import { uiText } from '@/lib/ui-text'
 import ChapterMenu from './ChapterMenu'
-import { MaximizeIcon, RepeatIcon, TextSizeIcon } from './icons'
+import { HomeIcon, MaximizeIcon, RepeatIcon, TextSizeIcon } from './icons'
 import TocMenu from './TocMenu'
 import styles from './Header.module.css'
 
@@ -12,12 +13,13 @@ const LARGE_TEXT_STORAGE_KEY = 'blog-large-text'
 
 type Props = {
   title?: string
+  showHomeLink?: boolean
   showChapterMenu?: boolean
   showAudioRepeat?: boolean
   tocItems?: TocItem[]
 }
 
-export default function Header({ title, showChapterMenu, showAudioRepeat, tocItems }: Props) {
+export default function Header({ title, showHomeLink, showChapterMenu, showAudioRepeat, tocItems }: Props) {
   const [largeText, setLargeText] = useState(false)
   const [loop, setLoop] = useState(false)
   const [fullscreenSupported, setFullscreenSupported] = useState(false)
@@ -91,6 +93,11 @@ export default function Header({ title, showChapterMenu, showAudioRepeat, tocIte
     <header className={styles.header}>
       {title && <span className={styles.pageTitle}>{title}</span>}
       <div className={styles.leftControls}>
+        {showHomeLink && (
+          <Link href="/" className={styles.headerButton} aria-label={uiText.nav.home} title={uiText.nav.home}>
+            <HomeIcon aria-hidden />
+          </Link>
+        )}
         <button
           type="button"
           className={`${styles.headerButton} ${largeText ? styles.headerButtonOn : ''}`}

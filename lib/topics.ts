@@ -1,9 +1,10 @@
 import { posts } from '#site/content'
 import { isHomeLinkPagePath } from '@/lib/home-link-pages'
+import { publicPathForPost } from '@/lib/ordinary'
 import { siteConfig } from '@/site.config'
 
 function visiblePosts() {
-  return posts.filter((p) => !p.draft && p.slugAsParams !== siteConfig.homeSlug && !isHomeLinkPagePath(p.slug))
+  return posts.filter((p) => p.slugAsParams !== siteConfig.homeSlug && !isHomeLinkPagePath(p.slug))
 }
 
 export type TopicInfo = { name: string; count: number }
@@ -11,8 +12,8 @@ export type TopicInfo = { name: string; count: number }
 export function getAllTopics(): TopicInfo[] {
   const counts = new Map<string, number>()
   for (const post of visiblePosts()) {
-    for (const base of post.base) {
-      counts.set(base, (counts.get(base) ?? 0) + 1)
+    for (const topic of post.topics) {
+      counts.set(topic, (counts.get(topic) ?? 0) + 1)
     }
   }
   return Array.from(counts.entries())
@@ -21,14 +22,14 @@ export function getAllTopics(): TopicInfo[] {
 }
 
 export function getPostsByTopic(topic: string) {
-  return visiblePosts().filter((p) => p.base.includes(topic))
+  return visiblePosts().filter((p) => p.topics.includes(topic))
 }
 
 export function getAllPosts() {
   return visiblePosts().map((p) => ({
-    slugAsParams: p.slugAsParams as string,
+    slugAsParams: publicPathForPost(p),
     title: p.title as string,
-    base: p.base as string[],
+    topics: p.topics as string[],
   }))
 }
 

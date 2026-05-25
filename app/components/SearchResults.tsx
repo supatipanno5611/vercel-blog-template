@@ -19,7 +19,7 @@ function getFieldBadges(fields: Set<string>): string[] {
   if (fields.has('title')) badges.push(uiText.search.fieldBadges.title)
   if (fields.has('body')) badges.push(uiText.search.fieldBadges.body)
   if (fields.has('audioTitle')) badges.push(uiText.search.fieldBadges.audioTitle)
-  if (fields.has('base')) badges.push(uiText.search.fieldBadges.base)
+  if (fields.has('topics')) badges.push(uiText.search.fieldBadges.topics)
   return badges
 }
 
@@ -80,7 +80,7 @@ export default function SearchResults({
 
   return (
     <ul id={resultsId} className={styles.results} role="listbox" aria-label={uiText.search.resultsLabel}>
-      {filter === 'base' ? (
+      {filter === 'topics' ? (
         <>
           {hasQuery &&
             topicResults.map((result, i) => {

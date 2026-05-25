@@ -1,8 +1,9 @@
 export const siteConfig = {
   title: '',
   description: '',
-  VAULT_PUBLISH: '_publish',
-  homeSlug: 'home',
+  lang: 'ko',
+  VAULT_PUBLISH: '',
+  homeSlug: '홈',
   curatedTopicSourceTitles: [] as string[],
   contentDoctor: {
     ignoreFiles: [] as string[],

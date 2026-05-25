@@ -1,22 +1,22 @@
 @import url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/css/SpoqaHanSansNeo.css');
 
 :root {
-  --color-bg: #ffffff;
-  --color-text: #000000;
-  --color-muted: #888888;
-  --color-border: #eaeaea;
-  --color-surface: #fafafa;
-  --color-hover: #f5f5f5;
+  --color-bg: #fbf8f4;
+  --color-text: lab(35.5168% 1.08604 4.07829);
+  --color-muted: #8a8178;
+  --color-border: #e6ded5;
+  --color-surface: #fffdf9;
+  --color-hover: #f1ebe4;
   --color-overlay: rgba(0, 0, 0, 0.4);
-  --color-dropdown-bg: rgba(250, 250, 250, 0.92);
+  --color-dropdown-bg: rgba(255, 253, 249, 0.94);
 
-  --color-accent: #0070f3;
-  --color-accent-hover: #0051b3;
-  --color-accent-soft: #eef4ff;
-  --color-focus-ring: rgba(0, 112, 243, 0.15);
+  --color-accent: #8b5e34;
+  --color-accent-hover: #6f4725;
+  --color-accent-soft: #f1e5d8;
+  --color-focus-ring: rgba(139, 94, 52, 0.18);
 
-  --shadow-sm: rgba(0, 0, 0, 0.15);
-  --shadow-md: rgba(0, 0, 0, 0.12);
+  --shadow-sm: rgba(65, 48, 34, 0.14);
+  --shadow-md: rgba(65, 48, 34, 0.11);
 
   --fab-bg: var(--color-text);
   --fab-color: var(--color-bg);
@@ -56,15 +56,15 @@
 
   --callout-note: var(--color-accent);
   --callout-info: var(--color-accent);
-  --callout-important: #b45309;
-  --callout-success: #16a34a;
-  --callout-warning: #b45309;
-  --callout-danger: #dc2626;
+  --callout-important: #9a5b17;
+  --callout-success: #4f7f55;
+  --callout-warning: #a0661f;
+  --callout-danger: #b0443e;
   --callout-title-bg: var(--color-hover);
 
   --code-inline-bg: var(--color-hover);
-  --code-block-bg: #111111;
-  --code-block-text: #ededed;
+  --code-block-bg: #2b2520;
+  --code-block-text: #f7efe7;
   --article-large-font-size: 21px;
 
   --bg: var(--color-bg);

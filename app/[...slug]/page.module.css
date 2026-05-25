@@ -15,6 +15,46 @@
   margin-bottom: 96px;
 }
 
+.articleWithIndexToc {
+  margin-bottom: 48px;
+}
+
+.indexToc {
+  margin: 0 0 96px;
+}
+
+.indexTocHeading {
+  margin: 0 0 20px;
+  color: var(--color-text);
+  font-size: 1.1rem;
+  line-height: 1.4;
+}
+
+.indexTocList {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.indexTocList li + li {
+  margin-top: 10px;
+}
+
+.indexTocLink {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.indexTocLink:hover {
+  color: var(--color-accent);
+}
+
+.indexTocEmpty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.93rem;
+  line-height: 1.6;
+}
+
 .footer {
   border-top: 1px solid var(--border);
   padding-top: 40px;
@@ -27,6 +67,39 @@
   font-size: 0.875rem;
   color: var(--muted);
   margin-bottom: 16px;
+}
+
+.footerTitle {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 0.93rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.personList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+}
+
+.personRow {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 12px;
+  font-size: 0.93rem;
+  line-height: 1.6;
+}
+
+.personRow dt {
+  color: var(--muted);
+}
+
+.personRow dd {
+  margin: 0;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
 }
 
 .audioBlock {

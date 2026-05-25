@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 import { safeDecodeURIComponent } from '@/lib/safe-decode'
 import { getAllTopics, getPostsByTopic } from '@/lib/topics'
+import { publicPathForPost } from '@/lib/ordinary'
 import { getCuratedTopics } from '@/lib/curatedTopics'
 import TopicsClient from './TopicsClient'
 
@@ -21,9 +22,9 @@ export default async function TopicPage({ params }: Props) {
   if (!allTopics.some((t) => t.name === decodedTopic)) notFound()
 
   const topicPosts = getPostsByTopic(decodedTopic).map((p) => ({
-    slugAsParams: p.slugAsParams,
+    slugAsParams: publicPathForPost(p),
     title: p.title,
-    base: p.base,
+    topics: p.topics,
   }))
 
   return (

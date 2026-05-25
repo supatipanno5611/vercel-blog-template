@@ -1,0 +1,95 @@
+.main {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: calc(120px + env(safe-area-inset-top)) 24px 120px;
+}
+
+@media (max-width: 600px) {
+  .main {
+    padding: calc(100px + env(safe-area-inset-top)) 20px 80px;
+  }
+}
+
+.monthNav {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.monthLink,
+.dateLink,
+.cardTitle,
+.topicChip {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.monthLink:hover,
+.dateLink:hover,
+.cardTitle:hover {
+  color: var(--color-accent);
+}
+
+.day {
+  margin-bottom: 48px;
+}
+
+.date {
+  margin: 0 0 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 1.08rem;
+  line-height: 1.4;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+
+.cardTitle {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.preview,
+.empty {
+  color: var(--muted);
+  font-size: 0.93rem;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.topicList {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+}
+
+.topicChip {
+  display: inline-flex;
+  border: 1px solid var(--topic-chip-border);
+  border-radius: 999px;
+  padding: 4px 10px;
+  background: var(--topic-chip-bg);
+  color: var(--topic-chip-color);
+  font-size: 0.84rem;
+}
+
+.topicChip:hover {
+  border-color: var(--topic-chip-hover-border);
+  color: var(--color-accent);
+}

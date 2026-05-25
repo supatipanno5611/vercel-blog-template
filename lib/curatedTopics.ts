@@ -9,10 +9,10 @@ export function getCuratedTopics(): string[] {
     const post = posts.find((p) => p.title === title)
     if (!post) continue
 
-    for (const base of post.base) {
-      if (seen.has(base)) continue
-      seen.add(base)
-      result.push(base)
+    for (const topic of post.topics) {
+      if (seen.has(topic)) continue
+      seen.add(topic)
+      result.push(topic)
     }
   }
 

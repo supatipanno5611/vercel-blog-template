@@ -20,7 +20,6 @@ type Props = {
   selected: string[]
   onSingleSelect: (topic: string) => void
   onToggleSelect: (topic: string) => void
-  onFallbackSearch: (query: string) => void
 }
 
 export default function TopicPicker({
@@ -30,7 +29,6 @@ export default function TopicPicker({
   selected,
   onSingleSelect,
   onToggleSelect,
-  onFallbackSearch,
 }: Props) {
   const [query, setQuery] = useState('')
   const [activeIndex, setActiveIndex] = useState(0)
@@ -73,9 +71,6 @@ export default function TopicPicker({
     } else if (e.key === 'Enter') {
       e.preventDefault()
       if (showFallback) {
-        setQuery('')
-        setActiveIndex(0)
-        onFallbackSearch(query)
         return
       }
 
@@ -144,11 +139,7 @@ export default function TopicPicker({
           <ul className={searchStyles.results} role="listbox">
             {showFallback ? (
               <li ref={activeItemRef} className={styles.fallbackRow}>
-                <button className={styles.fallbackBtn} onClick={() => onFallbackSearch(query)}>
-                  <span className={searchStyles.title}>
-                    {uiText.topic.fallbackSearch(query)}
-                  </span>
-                </button>
+                <span className={styles.fallbackText}>{uiText.topic.noMatches}</span>
               </li>
             ) : (
               filtered.map((topic, i) => {

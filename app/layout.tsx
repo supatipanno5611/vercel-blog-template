@@ -30,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="ko" suppressHydrationWarning>
+    <html lang={siteConfig.lang} suppressHydrationWarning>
       <body>
         <script dangerouslySetInnerHTML={{ __html: largeTextScript }} />
         <ScrollProgress />

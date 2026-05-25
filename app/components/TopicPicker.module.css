@@ -1,5 +1,4 @@
-.topicRow,
-.fallbackBtn {
+.topicRow {
   width: 100%;
   display: flex;
   align-items: center;
@@ -15,7 +14,6 @@
 }
 
 .topicRow:hover,
-.fallbackBtn:hover,
 .activeRow .topicRow {
   background: var(--search-active-bg);
 }
@@ -44,4 +42,10 @@
 
 .fallbackRow {
   list-style: none;
+}
+
+.fallbackText {
+  display: block;
+  padding: 9px 14px;
+  color: var(--muted);
 }

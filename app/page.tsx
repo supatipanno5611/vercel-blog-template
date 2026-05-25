@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { posts } from '#site/content'
 import { MarkdownContent } from '@/app/components/MarkdownContent'
 import Header from '@/app/components/Header'
+import TodayOrdinaryLink from '@/app/components/TodayOrdinaryLink'
 import { extractTocItems } from '@/lib/heading-toc'
 import { isHomeLinkPagePath } from '@/lib/home-link-pages'
 import { siteConfig } from '@/site.config'
@@ -13,7 +14,7 @@ export default function HomePage() {
   const enableHeadingAnchors = !home.youtubeId && !home.audioSrc
   const tocItems = enableHeadingAnchors ? extractTocItems(home.body) : []
   const homeLinkPosts = posts
-    .filter((p) => !p.draft && isHomeLinkPagePath(p.slug))
+    .filter((p) => isHomeLinkPagePath(p.slug))
     .sort((a, b) => a.slug.localeCompare(b.slug))
 
   return (
@@ -22,15 +23,18 @@ export default function HomePage() {
       <article className={styles.article}>
         <MarkdownContent source={home.body} enableHeadingAnchors={enableHeadingAnchors} />
       </article>
-      {homeLinkPosts.length > 0 && (
-        <footer className={styles.footer}>
+      <footer className={styles.footer}>
+        <TodayOrdinaryLink className={styles.footerLink} />
+        {homeLinkPosts.length > 0 && (
+          <>
           {homeLinkPosts.map((post) => (
             <a key={post.slug} href={`/${post.slugAsParams}`} className={styles.footerLink}>
               {post.title} →
             </a>
           ))}
-        </footer>
-      )}
+          </>
+        )}
+      </footer>
     </main>
   )
 }

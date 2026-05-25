@@ -1,19 +1,35 @@
 .share {
-  bottom: calc(24px + 48px + 10px + env(safe-area-inset-bottom));
+  bottom: calc(24px + env(safe-area-inset-bottom));
   right: calc(24px + env(safe-area-inset-right));
 }
 
 :global(main[data-has-audio='true']) ~ .share {
+  bottom: calc(24px + 48px + 10px + env(safe-area-inset-bottom));
+}
+
+:global(main[data-has-parent-toc='true']) ~ .share {
+  bottom: calc(24px + 48px + 10px + env(safe-area-inset-bottom));
+}
+
+:global(main[data-has-audio='true'][data-has-parent-toc='true']) ~ .share {
   bottom: calc(24px + (48px + 10px) * 2 + env(safe-area-inset-bottom));
 }
 
 @media (max-width: 600px) {
   .share {
-    bottom: calc(20px + 48px + 10px + env(safe-area-inset-bottom));
+    bottom: calc(20px + env(safe-area-inset-bottom));
     right: calc(20px + env(safe-area-inset-right));
   }
 
   :global(main[data-has-audio='true']) ~ .share {
+    bottom: calc(20px + 48px + 10px + env(safe-area-inset-bottom));
+  }
+
+  :global(main[data-has-parent-toc='true']) ~ .share {
+    bottom: calc(20px + 48px + 10px + env(safe-area-inset-bottom));
+  }
+
+  :global(main[data-has-audio='true'][data-has-parent-toc='true']) ~ .share {
     bottom: calc(20px + (48px + 10px) * 2 + env(safe-area-inset-bottom));
   }
 }

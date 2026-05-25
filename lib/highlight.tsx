@@ -1,5 +1,3 @@
-import { disassemble, getChoseong } from 'es-hangul'
-
 type Range = {
   start: number
   end: number
@@ -36,25 +34,6 @@ function mergeRanges(ranges: Range[]): Range[] {
   return merged
 }
 
-function buildDisassembledIndex(text: string, toDisassembled: (char: string) => string) {
-  let value = ''
-  const map: Range[] = []
-  let offset = 0
-
-  for (const char of Array.from(text)) {
-    const start = offset
-    const end = start + char.length
-    const disassembled = toDisassembled(char.toLowerCase())
-    value += disassembled
-    for (let i = 0; i < disassembled.length; i++) {
-      map.push({ start, end })
-    }
-    offset = end
-  }
-
-  return { value, map }
-}
-
 function findAll(haystack: string, needle: string): number[] {
   const positions: number[] = []
   if (!needle) return positions
@@ -76,29 +55,11 @@ export function getHighlightRanges(text: string, query: string, extraTerms: stri
 
   const ranges: Range[] = []
   const lowerText = text.toLowerCase()
-  const disassembledIndex = buildDisassembledIndex(text, disassemble)
-  const choseongIndex = buildDisassembledIndex(text, getChoseong)
 
   for (const term of terms) {
     const lowerTerm = term.toLowerCase()
     for (const pos of findAll(lowerText, lowerTerm)) {
       addRange(ranges, pos, pos + lowerTerm.length)
-    }
-
-    const disassembledTerm = disassemble(lowerTerm)
-    for (const pos of findAll(disassembledIndex.value, disassembledTerm)) {
-      const start = disassembledIndex.map[pos]?.start
-      const end = disassembledIndex.map[pos + disassembledTerm.length - 1]?.end
-      if (start !== undefined && end !== undefined) addRange(ranges, start, end)
-    }
-
-    const choseongTerm = getChoseong(lowerTerm)
-    if (choseongTerm.length > 0) {
-      for (const pos of findAll(choseongIndex.value, choseongTerm)) {
-        const start = choseongIndex.map[pos]?.start
-        const end = choseongIndex.map[pos + choseongTerm.length - 1]?.end
-        if (start !== undefined && end !== undefined) addRange(ranges, start, end)
-      }
     }
   }
 

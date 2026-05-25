@@ -3,6 +3,10 @@ export const uiText = {
     more: '더 보기',
     postCount: (count: number) => `${count}개의 글`,
   },
+  nav: {
+    home: '홈으로 가기',
+    todayOrdinary: '오늘의 일상 노트로 이동',
+  },
   search: {
     open: '검색 열기',
     openWithShortcut: '검색 (Ctrl+K)',
@@ -11,26 +15,26 @@ export const uiText = {
     clear: '검색어 지우기',
     resultsLabel: '검색 결과',
     heading: '검색 결과',
-    headingForQuery: (query: string) => `“${query}” 검색 결과`,
+    headingForQuery: (query: string) => `"${query}" 검색 결과`,
     resultCount: (count: number) => `${count}개의 결과`,
     noResults: (query: string) => `"${query}"에 대한 결과가 없어요.`,
     viewAllResults: (query: string) => `"${query}" 전체 결과 보기`,
     tryAll: '전체에서 다시 검색',
     loading: '검색 인덱스를 불러오는 중...',
     loadError: '검색을 불러오지 못했어요. 다시 시도해 주세요.',
-    guide: '제목, 본문, 오디오 제목에서 검색합니다.',
+    guide: '제목, 본문, 주제어, 오디오 제목에서 검색합니다.',
     matchedIn: (fields: string) => `${fields}에서 일치`,
     filters: {
       all: '전체',
       title: '제목',
       body: '본문',
-      base: '주제어',
+      topics: '주제어',
     },
     fieldBadges: {
       title: '제목',
       body: '본문',
       audioTitle: '오디오',
-      base: '주제어',
+      topics: '주제어',
     },
     placeholders: ['글 검색', '주제어 찾기', '제목이나 본문 검색', '무엇을 찾고 있나요?'],
     hints: {
@@ -43,6 +47,7 @@ export const uiText = {
     },
   },
   topic: {
+    title: '주제어 검색 페이지',
     openSearch: '주제어 검색 열기',
     openSearchWithShortcut: '주제어 검색 (Ctrl+K)',
     searchDialog: '주제어 검색',
@@ -56,7 +61,7 @@ export const uiText = {
     emptyCombination: '이 주제어 조합에 맞는 글이 없어요.',
     resetSearch: '검색 초기화',
     fallbackNotice: '정확히 일치하는 글이 없어 관련 글을 보여줍니다.',
-    fallbackSearch: (query: string) => `일치하는 주제어가 없어요. 글에서 "${query}" 검색`,
+    noMatches: '일치하는 주제어가 없어요.',
   },
   audio: {
     label: '오디오',
@@ -77,6 +82,16 @@ export const uiText = {
   toc: {
     label: '본문 목차',
   },
+  parentToc: {
+    label: '목차 보기',
+    indexLink: '목차 글 보기',
+    empty: '이 목차에 속한 글이 없어요.',
+    current: '현재 글',
+  },
+  indexToc: {
+    heading: '목차',
+    empty: '이 목차에 속한 글이 없어요.',
+  },
   chapter: {
     list: '챕터 목록',
     jumpTo: (label: string, title: string) => `${label} ${title}로 이동`,
@@ -92,9 +107,19 @@ export const uiText = {
     copied: '복사됨',
   },
   postFooter: {
+    title: '제목',
+    date: '날짜',
+    ordinaryMonth: '모음',
+    info: '정보',
     audio: '오디오',
     topics: '주제어',
     related: '관련 글',
     backlinks: '백링크',
+  },
+  ordinary: {
+    emptyMonth: '이 달에 작성된 일상 노트가 없습니다.',
+    emptyToday: '아직 기록이 없습니다.',
+    previousMonth: '이전 달',
+    nextMonth: '다음 달',
   },
 } as const

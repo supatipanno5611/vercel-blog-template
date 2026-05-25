@@ -4,7 +4,9 @@ import { copyFile, mkdir, readFile, readdir, rm } from 'node:fs/promises'
 import { dirname, join, relative, resolve } from 'node:path'
 import { argv, cwd, env, exit, stdin, stdout } from 'node:process'
 import readline from 'node:readline/promises'
+import { publicSlugForContentPath } from '../lib/home-link-pages.ts'
 import { isSafeAudioSrc, YOUTUBE_ID_RE } from '../lib/markdown-security.ts'
+import { isNestedOrdinaryPath, isValidContentDate, requiresContentDate } from '../lib/ordinary.ts'
 import { siteConfig } from '../site.config.ts'
 
 const ROOT = cwd()
@@ -27,9 +29,11 @@ async function main() {
     throw new Error(`Source folder does not exist: ${SOURCE_ROOT}`)
   }
 
+  const sourceFiles = await scanMarkdownFiles(SOURCE_ROOT)
+  await validateSourceFiles(sourceFiles)
+
   await mkdir(TARGET_ROOT, { recursive: true })
 
-  const sourceFiles = await scanMarkdownFiles(SOURCE_ROOT)
   const targetFiles = await scanMarkdownFiles(TARGET_ROOT)
   const plan = buildPublishPlan(sourceFiles, targetFiles)
 
@@ -43,8 +47,6 @@ async function main() {
     console.log('No changes.')
     return
   }
-
-  await validateSourceFiles(sourceFiles)
 
   if (!AUTO_YES) {
     const rl = readline.createInterface({ input: stdin, output: stdout })
@@ -167,23 +169,92 @@ function printGroup(label, items, format) {
 
 async function validateSourceFiles(sourceFiles) {
   const errors = []
+  const posts = []
+  const postsBySlug = new Map()
+  const postsByRef = new Map()
 
   for (const file of sourceFiles.values()) {
     const source = await readFile(file.path, 'utf8')
-    const fileErrors = validateMarkdownOnly(source)
+    const frontmatter = parseFrontmatter(source)
+    const data = parseFrontmatterData(frontmatter)
+    const slug = publicSlugForContentPath(file.key)
+    const fileErrors = validateMarkdownOnly(source, file.key)
     for (const error of fileErrors) errors.push(`${file.key}: ${error}`)
+
+    const existing = postsBySlug.get(slug)
+    if (existing) {
+      errors.push(`${file.key}: duplicate slug after normalization: ${existing.key} and ${file.key} both map to ${slug}`)
+    } else {
+      postsBySlug.set(slug, { key: file.key, data })
+    }
+    const post = { key: file.key, ref: file.key.replace(/\.md$/, ''), slug, data, order: parseOrder(frontmatter) }
+    postsByRef.set(post.ref, post)
+    posts.push(post)
   }
+
+  validateContentRelationships(posts, postsByRef, errors)
 
   if (errors.length > 0) {
     throw new Error(`Markdown-only validation failed:\n- ${errors.join('\n- ')}`)
   }
 }
 
-function validateMarkdownOnly(source) {
+function validateContentRelationships(posts, postsByRef, errors) {
+  const ordersByParent = new Map()
+
+  for (const post of posts) {
+    if (post.data.type === 'index' && post.data.parent) {
+      errors.push(`${post.key}: type: index cannot declare parent`)
+    }
+    if (post.data.type === 'index' && post.order !== undefined) {
+      errors.push(`${post.key}: type: index cannot declare order`)
+    } else if (!post.data.parent && post.order !== undefined) {
+      errors.push(`${post.key}: order cannot be declared without parent`)
+    }
+    if (!post.data.parent) continue
+    if (post.order === undefined) {
+      errors.push(`${post.key}: order is required when parent is set: ${post.data.parent}`)
+    } else if (post.order === null) {
+      errors.push(`${post.key}: order must be a positive integer`)
+    } else {
+      const siblingOrders = ordersByParent.get(post.data.parent) ?? new Map()
+      const existing = siblingOrders.get(post.order)
+      if (existing) {
+        errors.push(`${post.key}: duplicate order ${post.order} with ${existing}`)
+      } else {
+        siblingOrders.set(post.order, post.key)
+        ordersByParent.set(post.data.parent, siblingOrders)
+      }
+    }
+
+    const parent = postsByRef.get(post.data.parent)
+    if (post.data.parent === post.ref) {
+      errors.push(`${post.key}: parent cannot reference itself: ${post.data.parent}`)
+    } else if (!parent) {
+      errors.push(`${post.key}: missing parent: ${post.data.parent}`)
+    } else if (parent.data.type !== 'index') {
+      errors.push(`${post.key}: parent must reference type: index post: ${post.data.parent}`)
+    }
+  }
+}
+
+function validateMarkdownOnly(source, key) {
   const errors = []
   const markdownBody = stripFencedCode(source)
   const frontmatter = parseFrontmatter(source)
   const data = parseFrontmatterData(frontmatter)
+
+  if (data.draft !== undefined) {
+    errors.push('draft frontmatter is no longer supported; publish only files in VAULT_PUBLISH')
+  }
+  if (isNestedOrdinaryPath(key)) {
+    errors.push('ordinary posts must be stored directly under content/ordinary')
+  }
+  if (data.date !== undefined && !isValidContentDate(data.date)) {
+    errors.push(`invalid date: ${data.date}`)
+  } else if (requiresContentDate(key, data.type, siteConfig.homeSlug) && data.date === undefined) {
+    errors.push('date frontmatter is required for readable posts')
+  }
 
   if (/^\s*(?:import|export)\s/m.test(markdownBody)) {
     errors.push('import/export is not allowed')
@@ -197,8 +268,11 @@ function validateMarkdownOnly(source) {
   for (const match of markdownBody.matchAll(/::([A-Za-z][\w-]*)\b/g)) {
     errors.push(`unsupported directive: ${match[1]}`)
   }
-  if (data.media !== undefined) {
-    errors.push('media frontmatter is no longer supported')
+  if (data.type !== undefined && data.type !== 'index') {
+    errors.push(`unsupported type: ${data.type}`)
+  }
+  if (data.type === 'index' && data.topics !== undefined) {
+    errors.push('type: index cannot use topics frontmatter')
   }
   if (data.youtubeId && data.audioSrc) {
     errors.push('youtubeId and audioSrc cannot be used together')
@@ -241,6 +315,13 @@ function parseFrontmatterData(frontmatter) {
     data[scalar[1]] = unquote(scalar[2])
   }
   return data
+}
+
+function parseOrder(frontmatter) {
+  const match = frontmatter.match(/^order:\s*(.*?)\s*$/m)
+  if (!match) return undefined
+  if (!/^[1-9]\d*$/.test(match[1])) return null
+  return Number(match[1])
 }
 
 function unquote(value) {
