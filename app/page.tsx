@@ -5,6 +5,7 @@ import Header from '@/app/components/Header'
 import TodayOrdinaryLink from '@/app/components/TodayOrdinaryLink'
 import { extractTocItems } from '@/lib/heading-toc'
 import { isHomeLinkPagePath } from '@/lib/home-link-pages'
+import { uiText } from '@/lib/ui-text'
 import { siteConfig } from '@/site.config'
 import styles from './page.module.css'
 
@@ -25,6 +26,9 @@ export default function HomePage() {
       </article>
       <footer className={styles.footer}>
         <TodayOrdinaryLink className={styles.footerLink} />
+        <a href="/topics/search" className={styles.footerLink}>
+          {uiText.topic.browse} →
+        </a>
         {homeLinkPosts.length > 0 && (
           <>
           {homeLinkPosts.map((post) => (
