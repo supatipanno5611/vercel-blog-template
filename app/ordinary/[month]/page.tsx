@@ -13,6 +13,7 @@ import {
   publicHrefForPost,
   todayInOrdinaryTimeZone,
 } from '@/lib/ordinary'
+import { siteConfig } from '@/site.config'
 import { uiText } from '@/lib/ui-text'
 import styles from './page.module.css'
 
@@ -23,6 +24,7 @@ type Props = {
 export const dynamic = 'force-dynamic'
 
 export default async function OrdinaryMonthPage({ params }: Props) {
+  if (!siteConfig.enableOrdinaryNotes) notFound()
   const { month } = await params
   if (!isValidMonth(month)) notFound()
 

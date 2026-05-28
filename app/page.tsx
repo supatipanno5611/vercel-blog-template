@@ -25,7 +25,7 @@ export default function HomePage() {
         <MarkdownContent source={home.body} enableHeadingAnchors={enableHeadingAnchors} />
       </article>
       <footer className={styles.footer}>
-        <TodayOrdinaryLink className={styles.footerLink} />
+        {siteConfig.enableOrdinaryNotes && <TodayOrdinaryLink className={styles.footerLink} />}
         <a href="/topics/search" className={styles.footerLink}>
           {uiText.topic.browse} →
         </a>

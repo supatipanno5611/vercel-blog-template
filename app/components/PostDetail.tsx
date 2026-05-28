@@ -11,6 +11,7 @@ import { isOrdinaryPath, monthFromDate, monthLabel, publicHrefForPost } from '@/
 import { getIndexToc, getParentToc } from '@/lib/parent-toc'
 import { overlapCount, jaccard } from '@/lib/topics'
 import { uiText } from '@/lib/ui-text'
+import { siteConfig } from '@/site.config'
 import styles from '@/app/[...slug]/page.module.css'
 
 type Post = (typeof posts)[number]
@@ -19,14 +20,24 @@ export default function PostDetail({ post }: { post: Post }) {
   const relatedPosts =
     post.topics.length > 0
       ? posts
-          .filter((candidate) => candidate.slugAsParams !== post.slugAsParams && candidate.topics.some((topic) => post.topics.includes(topic)))
+          .filter(
+            (candidate) =>
+              candidate.slugAsParams !== post.slugAsParams &&
+              candidate.topics.some((topic) => post.topics.includes(topic)) &&
+              (siteConfig.enableOrdinaryNotes || !isOrdinaryPath(candidate.slug)),
+          )
           .map((candidate) => ({ candidate, overlap: overlapCount(candidate.topics, post.topics), sim: jaccard(candidate.topics, post.topics) }))
           .sort((a, b) => b.overlap - a.overlap || b.sim - a.sim)
           .slice(0, 5)
           .map((item) => item.candidate)
       : []
   const backlinks = posts
-    .filter((candidate) => candidate.slugAsParams !== post.slugAsParams && candidate.wikiLinks.includes(post.slugAsParams))
+    .filter(
+      (candidate) =>
+        candidate.slugAsParams !== post.slugAsParams &&
+        candidate.wikiLinks.includes(post.slugAsParams) &&
+        (siteConfig.enableOrdinaryNotes || !isOrdinaryPath(candidate.slug)),
+    )
     .slice(0, 5)
   const enableHeadingAnchors = !post.youtubeId && !post.audioSrc
   const showChapterMenu = Boolean(post.youtubeId || post.audioSrc)

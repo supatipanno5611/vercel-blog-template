@@ -1,10 +1,15 @@
 import { posts } from '#site/content'
 import { isHomeLinkPagePath } from '@/lib/home-link-pages'
-import { publicPathForPost } from '@/lib/ordinary'
+import { isOrdinaryPath, publicPathForPost } from '@/lib/ordinary'
 import { siteConfig } from '@/site.config'
 
 function visiblePosts() {
-  return posts.filter((p) => p.slugAsParams !== siteConfig.homeSlug && !isHomeLinkPagePath(p.slug))
+  return posts.filter(
+    (p) =>
+      p.slugAsParams !== siteConfig.homeSlug &&
+      !isHomeLinkPagePath(p.slug) &&
+      (siteConfig.enableOrdinaryNotes || !isOrdinaryPath(p.slug)),
+  )
 }
 
 export type TopicInfo = { name: string; count: number }

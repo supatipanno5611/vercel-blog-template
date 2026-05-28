@@ -1,6 +1,6 @@
 import { posts } from '#site/content'
 import { isHomeLinkPagePath } from '@/lib/home-link-pages'
-import { publicHrefForPost } from '@/lib/ordinary'
+import { isOrdinaryPath, publicHrefForPost } from '@/lib/ordinary'
 import { siteConfig } from '@/site.config'
 
 export type SearchDoc = {
@@ -15,7 +15,12 @@ export type SearchDoc = {
 
 export function getSearchDocs(): SearchDoc[] {
   return posts
-    .filter((p) => p.slugAsParams !== siteConfig.homeSlug && !isHomeLinkPagePath(p.slug))
+    .filter(
+      (p) =>
+        p.slugAsParams !== siteConfig.homeSlug &&
+        !isHomeLinkPagePath(p.slug) &&
+        (siteConfig.enableOrdinaryNotes || !isOrdinaryPath(p.slug)),
+    )
     .map((p) => {
       const audioTitle = p.audioTitle ?? ''
       return {

@@ -4,6 +4,7 @@ export const siteConfig = {
   lang: 'ko',
   VAULT_PUBLISH: '',
   homeSlug: '홈',
+  enableOrdinaryNotes: true,
   curatedTopicSourceTitles: [] as string[],
   contentDoctor: {
     ignoreFiles: [] as string[],
