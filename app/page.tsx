@@ -17,6 +17,7 @@ export default function HomePage() {
   const homeLinkPosts = posts
     .filter((p) => isHomeLinkPagePath(p.slug))
     .sort((a, b) => a.slug.localeCompare(b.slug))
+  const hasIndexPosts = posts.some((post) => post.type === 'index')
 
   return (
     <main className={styles.main}>
@@ -29,6 +30,11 @@ export default function HomePage() {
         <a href="/topics/search" className={styles.footerLink}>
           {uiText.topic.browse} →
         </a>
+        {hasIndexPosts && (
+          <a href="/indexes" className={styles.footerLink}>
+            {uiText.indexes.title} →
+          </a>
+        )}
         {homeLinkPosts.length > 0 && (
           <>
           {homeLinkPosts.map((post) => (

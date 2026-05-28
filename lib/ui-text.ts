@@ -92,6 +92,10 @@ export const uiText = {
     heading: '목차',
     empty: '이 목차에 속한 글이 없어요.',
   },
+  indexes: {
+    title: '목차가 있는 글들',
+    empty: '아직 목차가 있는 글이 없습니다.',
+  },
   chapter: {
     list: '챕터 목록',
     jumpTo: (label: string, title: string) => `${label} ${title}로 이동`,
