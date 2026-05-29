@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import { existsSync } from 'node:fs'
-import { copyFile, mkdir, readFile, readdir, rm } from 'node:fs/promises'
-import { dirname, join, relative, resolve } from 'node:path'
+import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises'
+import { basename, dirname, join, relative, resolve } from 'node:path'
 import { argv, cwd, env, exit, stdin, stdout } from 'node:process'
 import readline from 'node:readline/promises'
 import { publicSlugForContentPath } from '../lib/home-link-pages.ts'
@@ -12,6 +12,7 @@ import { siteConfig } from '../site.config.ts'
 const ROOT = cwd()
 const SOURCE_ROOT = resolve(env.VAULT_PUBLISH ?? getRequiredConfig('VAULT_PUBLISH'))
 const TARGET_ROOT = resolve(env.VERCEL_CONTENT ?? join(ROOT, 'content'))
+const SOURCE_ROOT_NAME = basename(SOURCE_ROOT)
 const CHECK_ONLY = argv.includes('--check')
 const AUTO_YES = argv.includes('--yes')
 const EXCLUDED_DIRS = new Set(['.git', '.obsidian', '.trash', 'node_modules'])
@@ -29,7 +30,7 @@ async function main() {
     throw new Error(`Source folder does not exist: ${SOURCE_ROOT}`)
   }
 
-  const sourceFiles = await scanMarkdownFiles(SOURCE_ROOT)
+  const sourceFiles = await scanMarkdownFiles(SOURCE_ROOT, { normalizeParent: true })
   await validateSourceFiles(sourceFiles)
 
   await mkdir(TARGET_ROOT, { recursive: true })
@@ -70,18 +71,18 @@ function validateArgs() {
   }
 }
 
-async function scanMarkdownFiles(root) {
+async function scanMarkdownFiles(root, options = {}) {
   const files = new Map()
-  await scanDir(root, root, files)
+  await scanDir(root, root, files, options)
   return files
 }
 
-async function scanDir(root, dir, files) {
+async function scanDir(root, dir, files, options) {
   const entries = await readdir(dir, { withFileTypes: true })
   for (const entry of entries) {
     if (entry.isDirectory()) {
       if (!EXCLUDED_DIRS.has(entry.name)) {
-        await scanDir(root, join(dir, entry.name), files)
+        await scanDir(root, join(dir, entry.name), files, options)
       }
       continue
     }
@@ -90,7 +91,9 @@ async function scanDir(root, dir, files) {
 
     const path = join(dir, entry.name)
     const key = toRelativeKey(root, path)
-    const content = await readFile(path)
+    const content = options.normalizeParent
+      ? normalizeParentFrontmatter(await readFile(path, 'utf8'), { strict: false })
+      : await readFile(path)
     files.set(key, {
       key,
       path,
@@ -177,6 +180,12 @@ async function validateSourceFiles(sourceFiles) {
     const source = await readFile(file.path, 'utf8')
     const frontmatter = parseFrontmatter(source)
     const data = parseFrontmatterData(frontmatter)
+    const normalizedParent = normalizeParentRef(data.parent)
+    if (normalizedParent.error) {
+      errors.push(`${file.key}: unsupported parent wikilink: ${data.parent}`)
+    } else if (normalizedParent.value) {
+      data.parent = normalizedParent.value
+    }
     const slug = publicSlugForContentPath(file.key)
     const fileErrors = validateMarkdownOnly(source, file.key)
     for (const error of fileErrors) errors.push(`${file.key}: ${error}`)
@@ -317,6 +326,50 @@ function parseFrontmatterData(frontmatter) {
   return data
 }
 
+function normalizeParentRef(value) {
+  if (!value) return { value }
+
+  let parent = value.trim().replace(/\\/g, '/')
+  const wikiLink = parent.match(/^\[\[([^\]|#^\n]+)\]\]$/)
+  if (/^\[\[/.test(parent)) {
+    if (!wikiLink) return { value: parent, error: true }
+    parent = wikiLink[1].trim()
+  }
+
+  parent = parent.replace(/\.md$/i, '')
+  if (parent === SOURCE_ROOT_NAME) return { value: '' }
+  if (parent.startsWith(`${SOURCE_ROOT_NAME}/`)) parent = parent.slice(SOURCE_ROOT_NAME.length + 1)
+  return { value: parent }
+}
+
+function yamlScalar(value) {
+  if (/^[A-Za-z0-9_./:%?&=#@+-]+$/.test(value)) return value
+  return JSON.stringify(value)
+}
+
+function normalizeParentFrontmatter(source, { strict }) {
+  const open = source.match(/^---\r?\n/)
+  if (!open) return source
+
+  const closeRe = /\r?\n---(?:\r?\n|$)/g
+  closeRe.lastIndex = open[0].length
+  const close = closeRe.exec(source)
+  if (!close) return source
+
+  const matter = source.slice(open[0].length, close.index)
+  const normalizedMatter = matter.replace(/^parent:\s*(.*?)\s*$/m, (line, rawValue) => {
+    const value = unquote(rawValue)
+    const normalized = normalizeParentRef(value)
+    if (normalized.error) {
+      if (strict) throw new Error(`unsupported parent wikilink: ${value}`)
+      return line
+    }
+    return normalized.value ? `parent: ${yamlScalar(normalized.value)}` : line
+  })
+
+  return `${source.slice(0, open[0].length)}${normalizedMatter}${source.slice(close.index)}`
+}
+
 function parseOrder(frontmatter) {
   const match = frontmatter.match(/^order:\s*(.*?)\s*$/m)
   if (!match) return undefined
@@ -335,7 +388,7 @@ async function applyPlan(plan) {
 
 async function copyMarkdownFile(from, to) {
   await mkdir(dirname(to), { recursive: true })
-  await copyFile(from, to)
+  await writeFile(to, normalizeParentFrontmatter(await readFile(from, 'utf8'), { strict: true }))
 }
 
 main().catch((error) => {
