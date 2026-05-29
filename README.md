@@ -60,6 +60,7 @@ npm run dev
 | `npm run lint` | 코드 문법과 React 규칙을 검사할 때 |
 | `npm run content:check` | 글 파일의 frontmatter, 링크, 주제어, 날짜 등을 검사할 때 |
 | `npm run content:fix` | 고칠 수 있는 글 문제를 자동 수정할 때 |
+| `npm run content:unwrap` | Markdown 문단의 불필요한 줄바꿈을 정리할 때 |
 | `npm run sync` | 외부 글쓰기 폴더에서 `content`로 Markdown 파일을 복사할 때 |
 | `npm run sync -- --check` | 실제 복사 없이 무엇이 바뀔지 확인할 때 |
 | `npm run sync -- --yes` | 묻지 않고 바로 복사/삭제를 적용할 때 |
@@ -376,6 +377,8 @@ type: index
 - `topics`를 쓰면 안 됩니다.
 - `parent`를 쓰면 안 됩니다.
 - `order`를 쓰면 안 됩니다.
+
+사이트에 `type: index` 글이 하나라도 있으면 홈페이지 아래쪽에 목차 목록으로 가는 링크가 생기고, `/indexes` 화면에서 모든 목차 글을 볼 수 있습니다.
 
 ### `parent`와 `order`
 
