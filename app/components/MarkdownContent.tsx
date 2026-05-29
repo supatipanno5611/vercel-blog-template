@@ -19,6 +19,7 @@ import { CheckIcon, LinkIcon } from './icons'
 type Props = {
   source: string
   enableHeadingAnchors?: boolean
+  preserveLineBreaks?: boolean
 }
 
 function textFromChildren(children: ReactNode): string {
@@ -91,25 +92,27 @@ const urlTransform: UrlTransform = (url, key, node) => {
   return defaultUrlTransform(url)
 }
 
-export function MarkdownContent({ source, enableHeadingAnchors = true }: Props) {
+export function MarkdownContent({ source, enableHeadingAnchors = true, preserveLineBreaks = false }: Props) {
   const components = createComponents(enableHeadingAnchors)
 
   return (
-    <ReactMarkdown
-      remarkPlugins={[
-        remarkGfm,
-        remarkMarkdownOnly,
-        remarkMark,
-        remarkCallout,
-        remarkWikiLink,
-        remarkCue,
-        remarkChapter,
-      ]}
-      skipHtml
-      urlTransform={urlTransform}
-      components={components as Components}
-    >
-      {source}
-    </ReactMarkdown>
+    <div data-preserve-markdown-line-breaks={preserveLineBreaks || undefined}>
+      <ReactMarkdown
+        remarkPlugins={[
+          remarkGfm,
+          remarkMarkdownOnly,
+          remarkMark,
+          remarkCallout,
+          remarkWikiLink,
+          remarkCue,
+          remarkChapter,
+        ]}
+        skipHtml
+        urlTransform={urlTransform}
+        components={components as Components}
+      >
+        {source}
+      </ReactMarkdown>
+    </div>
   )
 }

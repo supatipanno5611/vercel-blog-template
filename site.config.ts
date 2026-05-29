@@ -5,6 +5,7 @@ export const siteConfig = {
   VAULT_PUBLISH: '',
   homeSlug: '홈',
   enableOrdinaryNotes: true,
+  preserveMarkdownLineBreaks: false,
   curatedTopicSourceTitles: [] as string[],
   contentDoctor: {
     ignoreFiles: [] as string[],

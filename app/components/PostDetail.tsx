@@ -66,7 +66,11 @@ export default function PostDetail({ post }: { post: Post }) {
         {post.audioSrc && <audio src={post.audioSrc} preload="metadata" />}
         {hasBody && (
           <article className={`${styles.article} ${indexToc ? styles.articleWithIndexToc : ''}`}>
-            <MarkdownContent source={post.body} enableHeadingAnchors={enableHeadingAnchors} />
+            <MarkdownContent
+              source={post.body}
+              enableHeadingAnchors={enableHeadingAnchors}
+              preserveLineBreaks={siteConfig.preserveMarkdownLineBreaks}
+            />
           </article>
         )}
         {indexToc && (

@@ -118,6 +118,10 @@ article p {
   text-align: justify;
 }
 
+article [data-preserve-markdown-line-breaks='true'] p {
+  white-space: pre-line;
+}
+
 article strong {
   color: var(--color-accent);
 }

@@ -23,7 +23,11 @@ export default function HomePage() {
     <main className={styles.main}>
       <Header title={home.title} tocItems={tocItems} />
       <article className={styles.article}>
-        <MarkdownContent source={home.body} enableHeadingAnchors={enableHeadingAnchors} />
+        <MarkdownContent
+          source={home.body}
+          enableHeadingAnchors={enableHeadingAnchors}
+          preserveLineBreaks={siteConfig.preserveMarkdownLineBreaks}
+        />
       </article>
       <footer className={styles.footer}>
         {siteConfig.enableOrdinaryNotes && <TodayOrdinaryLink className={styles.footerLink} />}
