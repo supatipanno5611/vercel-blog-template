@@ -12,14 +12,10 @@ export default function ShareFab() {
   const [copied, setCopied] = useState(false)
 
   const handleShare = useCallback(async () => {
-    const url = window.location.href
-    if (navigator.share) {
-      try { await navigator.share({ url }) } catch { /* user cancelled */ }
-    } else {
-      await navigator.clipboard.writeText(url)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    }
+    const url = decodeURI(window.location.href)
+    await navigator.clipboard.writeText(url)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
   }, [])
 
   return (
