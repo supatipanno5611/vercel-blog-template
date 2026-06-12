@@ -10,7 +10,7 @@ import TopicPicker from '@/app/components/TopicPicker'
 import { useHideOnScroll } from '@/app/components/useHideOnScroll'
 import { useSearchShortcut } from '@/app/components/hooks/useSearchShortcut'
 import fabStyles from '@/app/components/Fab.module.css'
-import { SearchIcon, XIcon } from '@/app/components/icons'
+import { CheckIcon, SearchIcon, XIcon } from '@/app/components/icons'
 import searchFabStyles from '@/app/components/Search.module.css'
 import styles from './page.module.css'
 
@@ -125,14 +125,20 @@ export default function TopicsClient({ topic, posts, allTopics, curatedTopics }:
         </div>
       )}
 
-      {selected.length === 0 && suggestedTopics.length > 0 && (
+      {suggestedTopics.length > 0 && (
         <div className={styles.emptyState}>
           <p className={styles.emptyHint}>{curatedTopics.length > 0 ? uiText.topic.recommended : uiText.topic.browse}</p>
           <div className={styles.recommendList}>
             {visibleSuggestedTopics.map((name) => {
               const info = allTopics.find((topicInfo) => topicInfo.name === name)
+              const isSelected = selected.includes(name)
               return (
-                <button key={name} className={styles.recommendChip} onClick={() => addTopic(name)}>
+                <button
+                  key={name}
+                  className={`${styles.recommendChip} ${isSelected ? styles.recommendChipSelected : ''}`}
+                  onClick={() => (isSelected ? removeTopic(name) : addTopic(name))}
+                >
+                  {isSelected && <CheckIcon className={styles.recommendChipCheck} aria-hidden />}
                   {name}
                   {info && <span className={styles.recommendCount}>{uiText.common.postCount(info.count)}</span>}
                 </button>

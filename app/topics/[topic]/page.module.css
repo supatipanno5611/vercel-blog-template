@@ -105,6 +105,18 @@
   color: var(--color-accent);
 }
 
+.recommendChipSelected {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+}
+
+.recommendChipCheck {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
 .recommendCount {
   color: var(--muted);
   font-size: 0.78rem;
